@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TWS SA:MP Server Guide - Mining & Resources</title>
+    <title>TWS SA:MP Server Guide - Complete Systems</title>
     <style>
-        /* SA:MP Dark Theme */
+        /* SA:MP Dark Theme - Updated with more colors */
         :root {
             --samp-dark: #121212;
             --samp-darker: #0a0a0a;
@@ -13,6 +13,11 @@
             --samp-blue: #2196F3;
             --samp-red: #f44336;
             --samp-yellow: #FFD700;
+            --samp-purple: #9C27B0;
+            --samp-orange: #FF9800;
+            --samp-cyan: #00BCD4;
+            --samp-pink: #E91E63;
+            --samp-teal: #009688;
             --samp-text: #e0e0e0;
             --samp-border: #333;
             --samp-card: #1e1e1e;
@@ -33,7 +38,7 @@
             overflow-x: hidden;
         }
         
-        /* Header & Navigation */
+        /* Header & Navigation - Updated */
         header {
             background: linear-gradient(to right, var(--samp-dark), #1a3c1a);
             padding: 1rem 2rem;
@@ -68,22 +73,31 @@
         .logo-icon {
             font-size: 2rem;
             color: var(--samp-yellow);
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
         }
         
         nav ul {
             display: flex;
             list-style: none;
-            gap: 20px;
+            gap: 10px;
             flex-wrap: wrap;
         }
         
         nav a {
             color: var(--samp-text);
             text-decoration: none;
-            padding: 8px 16px;
+            padding: 8px 12px;
             border-radius: 4px;
             transition: all 0.3s;
             border: 1px solid transparent;
+            font-size: 0.9rem;
+            white-space: nowrap;
         }
         
         nav a:hover {
@@ -99,19 +113,20 @@
             padding: 0 20px;
         }
         
-        /* Sections */
+        /* Sections - Updated for different colors */
         .section {
             background-color: var(--samp-card);
             border-radius: 8px;
             padding: 2rem;
             margin-bottom: 2rem;
-            border-left: 4px solid var(--samp-green);
             box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-            transition: transform 0.3s;
+            transition: transform 0.3s, box-shadow 0.3s;
+            border-left: 4px solid var(--samp-green);
         }
         
         .section:hover {
             transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.4);
         }
         
         .section-title {
@@ -128,7 +143,44 @@
             font-size: 1.5rem;
         }
         
-        /* Command Box */
+        /* Different section colors for visual variety */
+        .section-fishing {
+            border-left-color: var(--samp-cyan);
+        }
+        
+        .section-fishing .section-title {
+            color: var(--samp-cyan);
+            border-bottom-color: var(--samp-cyan);
+        }
+        
+        .section-housing {
+            border-left-color: var(--samp-orange);
+        }
+        
+        .section-housing .section-title {
+            color: var(--samp-orange);
+            border-bottom-color: var(--samp-orange);
+        }
+        
+        .section-market {
+            border-left-color: var(--samp-yellow);
+        }
+        
+        .section-market .section-title {
+            color: var(--samp-yellow);
+            border-bottom-color: var(--samp-yellow);
+        }
+        
+        .section-foraging {
+            border-left-color: var(--samp-teal);
+        }
+        
+        .section-foraging .section-title {
+            color: var(--samp-teal);
+            border-bottom-color: var(--samp-teal);
+        }
+        
+        /* Command Box - Enhanced */
         .command-box {
             background-color: var(--samp-dark);
             border: 1px solid var(--samp-border);
@@ -137,10 +189,17 @@
             margin: 15px 0;
             font-family: 'Courier New', monospace;
             position: relative;
+            transition: all 0.3s;
+        }
+        
+        .command-box:hover {
+            border-color: var(--samp-green);
+            transform: translateX(5px);
         }
         
         .command {
             color: var(--samp-yellow);
+            font-weight: bold;
         }
         
         .command-desc {
@@ -149,7 +208,7 @@
             margin-top: 5px;
         }
         
-        /* Image Gallery */
+        /* Image Gallery - Keep existing */
         .image-gallery {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -187,13 +246,18 @@
             color: #ccc;
         }
         
-        /* Steps */
+        /* Steps - Enhanced */
         .step {
             background-color: rgba(30, 30, 30, 0.8);
             border-radius: 6px;
             padding: 20px;
             margin: 20px 0;
             border-left: 3px solid var(--samp-blue);
+            transition: transform 0.3s;
+        }
+        
+        .step:hover {
+            transform: translateX(5px);
         }
         
         .step-number {
@@ -207,6 +271,153 @@
             line-height: 30px;
             margin-right: 10px;
             font-weight: bold;
+        }
+        
+        /* Items Grid - Enhanced */
+        .items-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .item-card {
+            background-color: var(--samp-dark);
+            padding: 15px;
+            border-radius: 6px;
+            text-align: center;
+            border: 1px solid var(--samp-border);
+            transition: all 0.3s;
+        }
+        
+        .item-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--samp-green);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        
+        .item-name {
+            color: var(--samp-yellow);
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .item-quantity {
+            color: var(--samp-green);
+            font-size: 0.9rem;
+        }
+        
+        /* Warning Box - Enhanced */
+        .warning-box {
+            background-color: rgba(244, 67, 54, 0.1);
+            border: 1px solid var(--samp-red);
+            border-radius: 6px;
+            padding: 15px;
+            margin: 20px 0;
+            animation: warningPulse 2s infinite;
+        }
+        
+        @keyframes warningPulse {
+            0% { border-color: var(--samp-red); }
+            50% { border-color: #ff6b6b; }
+            100% { border-color: var(--samp-red); }
+        }
+        
+        .warning-title {
+            color: var(--samp-red);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        
+        /* Info Box - New for positive info */
+        .info-box {
+            background-color: rgba(33, 150, 243, 0.1);
+            border: 1px solid var(--samp-blue);
+            border-radius: 6px;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        
+        .info-title {
+            color: var(--samp-blue);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        
+        /* Success Box - New for positive info */
+        .success-box {
+            background-color: rgba(76, 175, 80, 0.1);
+            border: 1px solid var(--samp-green);
+            border-radius: 6px;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        
+        .success-title {
+            color: var(--samp-green);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        
+        /* Table Styling */
+        .system-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background-color: var(--samp-dark);
+            border-radius: 6px;
+            overflow: hidden;
+        }
+        
+        .system-table th {
+            background-color: var(--samp-green);
+            color: white;
+            padding: 12px;
+            text-align: left;
+        }
+        
+        .system-table td {
+            padding: 12px;
+            border-bottom: 1px solid var(--samp-border);
+        }
+        
+        .system-table tr:hover {
+            background-color: rgba(76, 175, 80, 0.1);
+        }
+        
+        /* Requirements List */
+        .requirements-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .requirement-item {
+            background-color: var(--samp-dark);
+            padding: 15px;
+            border-radius: 6px;
+            border: 1px solid var(--samp-border);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s;
+        }
+        
+        .requirement-item:hover {
+            border-color: var(--samp-green);
+            transform: translateY(-3px);
+        }
+        
+        .requirement-check {
+            color: var(--samp-green);
+            font-size: 1.2rem;
         }
         
         /* Lightbox Modal */
@@ -239,53 +450,14 @@
             font-size: 40px;
             cursor: pointer;
             z-index: 2001;
+            transition: color 0.3s;
         }
         
-        /* Items Grid */
-        .items-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            margin: 20px 0;
-        }
-        
-        .item-card {
-            background-color: var(--samp-dark);
-            padding: 15px;
-            border-radius: 6px;
-            text-align: center;
-            border: 1px solid var(--samp-border);
-        }
-        
-        .item-name {
-            color: var(--samp-yellow);
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
-        
-        .item-quantity {
-            color: var(--samp-green);
-            font-size: 0.9rem;
-        }
-        
-        /* Warning Box */
-        .warning-box {
-            background-color: rgba(244, 67, 54, 0.1);
-            border: 1px solid var(--samp-red);
-            border-radius: 6px;
-            padding: 15px;
-            margin: 20px 0;
-        }
-        
-        .warning-title {
+        .close-lightbox:hover {
             color: var(--samp-red);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 10px;
         }
         
-        /* Responsive Design */
+        /* Responsive Design - Enhanced */
         @media (max-width: 768px) {
             .header-container {
                 flex-direction: column;
@@ -295,6 +467,12 @@
             
             nav ul {
                 justify-content: center;
+                gap: 8px;
+            }
+            
+            nav a {
+                padding: 6px 10px;
+                font-size: 0.85rem;
             }
             
             .container {
@@ -313,8 +491,17 @@
                 grid-template-columns: repeat(2, 1fr);
             }
             
+            .requirements-list {
+                grid-template-columns: 1fr;
+            }
+            
             h1 {
                 font-size: 1.5rem;
+            }
+            
+            .system-table {
+                display: block;
+                overflow-x: auto;
             }
         }
         
@@ -324,12 +511,16 @@
             }
             
             nav ul {
-                gap: 10px;
+                gap: 5px;
             }
             
             nav a {
-                padding: 6px 12px;
-                font-size: 0.9rem;
+                padding: 5px 8px;
+                font-size: 0.8rem;
+            }
+            
+            .logo h1 {
+                font-size: 1.3rem;
             }
         }
         
@@ -346,10 +537,56 @@
             color: #888;
             font-size: 0.9rem;
         }
+        
+        /* Scroll to top button */
+        .scroll-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background-color: var(--samp-green);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            z-index: 1000;
+            font-size: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            transition: all 0.3s;
+        }
+        
+        .scroll-top:hover {
+            background-color: var(--samp-blue);
+            transform: translateY(-5px);
+        }
+        
+        /* Section counter animation */
+        .section-counter {
+            display: inline-block;
+            background-color: var(--samp-green);
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 24px;
+            font-size: 0.8rem;
+            margin-left: 10px;
+            animation: counterPop 0.5s ease-out;
+        }
+        
+        @keyframes counterPop {
+            0% { transform: scale(0); }
+            70% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
     </style>
 </head>
 <body>
-    <!-- Header -->
+    <!-- Header with updated navigation -->
     <header>
         <div class="header-container">
             <div class="logo">
@@ -360,6 +597,10 @@
                 <ul>
                     <li><a href="#mining">⛏️ Mining</a></li>
                     <li><a href="#woodcutting">🪓 Woodcutting</a></li>
+                    <li><a href="#fishing">🎣 Fishing</a></li>
+                    <li><a href="#housing">🏠 Housing</a></li>
+                    <li><a href="#market">🏪 Market</a></li>
+                    <li><a href="#foraging">🌿 Foraging</a></li>
                     <li><a href="#warehouses">🏭 Warehouses</a></li>
                     <li><a href="#sidequests">📋 Side Quests</a></li>
                 </ul>
@@ -369,11 +610,11 @@
 
     <!-- Main Container -->
     <div class="container">
-        <!-- MINING SYSTEM SECTION -->
+        <!-- MINING SYSTEM SECTION - Existing with pictures -->
         <section id="mining" class="section">
             <h2 class="section-title">
                 <span class="section-icon">⛏️</span>
-                MINING SYSTEM
+                MINING SYSTEM <span class="section-counter">1</span>
             </h2>
             
             <p>Have you ever thought about doing extra work to get a couple resources for something useful? Grab a <span class="command">/shovel</span> and dive into the mines!</p>
@@ -523,11 +764,11 @@
             </div>
         </section>
         
-        <!-- WOODCUTTING SECTION -->
+        <!-- WOODCUTTING SECTION - Existing with pictures -->
         <section id="woodcutting" class="section">
             <h2 class="section-title">
                 <span class="section-icon">🪓</span>
-                WOODCUTTING SYSTEM
+                WOODCUTTING SYSTEM <span class="section-counter">2</span>
             </h2>
             
             <p>Woodcutting is essential for construction, crafting, and fuel. Use <span class="command">/cuttree</span> near marked trees.</p>
@@ -556,11 +797,444 @@
             <p><strong>Warehouse Storage:</strong> Drive loaded trucks to warehouses. Park and press <strong>N</strong> to store wood.</p>
         </section>
         
-        <!-- WAREHOUSES SECTION -->
+        <!-- NEW: FISHING SYSTEM SECTION - Without pictures -->
+        <section id="fishing" class="section section-fishing">
+            <h2 class="section-title">
+                <span class="section-icon">🎣</span>
+                FISHING SYSTEM <span class="section-counter">3</span>
+            </h2>
+            
+            <p>Fishing is a vital economy activity requiring teamwork on water vehicles. Perfect for gathering healing items, trade goods, and valuable resources!</p>
+            
+            <div class="success-box">
+                <div class="success-title">✅ REQUIREMENTS</div>
+                <div class="requirements-list">
+                    <div class="requirement-item">
+                        <span class="requirement-check">✅</span>
+                        <span>Boat with driver</span>
+                    </div>
+                    <div class="requirement-item">
+                        <span class="requirement-check">✅</span>
+                        <span>Passenger seat position</span>
+                    </div>
+                    <div class="requirement-item">
+                        <span class="requirement-check">✅</span>
+                        <span>On water surface</span>
+                    </div>
+                </div>
+            </div>
+            
+            <h3 style="color: var(--samp-cyan); margin: 25px 0 15px 0; border-bottom: 1px solid var(--samp-cyan); padding-bottom: 8px;">
+                🎮 Essential Commands
+            </h3>
+            
+            <div class="items-grid">
+                <div class="command-box">
+                    <div class="command">/fish</div>
+                    <div class="command-desc">Start fishing (when requirements met)</div>
+                </div>
+                <div class="command-box">
+                    <div class="command">/stopfish</div>
+                    <div class="command-desc">Cancel fishing session</div>
+                </div>
+                <div class="command-box">
+                    <div class="command">/fishinfo</div>
+                    <div class="command-desc">Check your fishing inventory</div>
+                </div>
+                <div class="command-box">
+                    <div class="command">/fishsell</div>
+                    <div class="command-desc">Sell caught items</div>
+                </div>
+                <div class="command-box">
+                    <div class="command">/profile</div>
+                    <div class="command-desc">View EXP points and level</div>
+                </div>
+            </div>
+            
+            <div class="info-box">
+                <div class="info-title">📊 LEVELING SYSTEM</div>
+                <div class="items-grid">
+                    <div class="item-card">
+                        <div class="item-name">Base Time</div>
+                        <div class="item-quantity">30 seconds per catch</div>
+                    </div>
+                    <div class="item-card">
+                        <div class="item-name">Level Up Effect</div>
+                        <div class="item-quantity">-5 seconds per Fishing level</div>
+                    </div>
+                    <div class="item-card">
+                        <div class="item-name">EXP Gain</div>
+                        <div class="item-quantity">+1 Fishing Point per catch</div>
+                    </div>
+                    <div class="item-card">
+                        <div class="item-name">Check Progress</div>
+                        <div class="item-quantity">Use /profile command</div>
+                    </div>
+                </div>
+            </div>
+            
+            <h3 style="color: var(--samp-yellow); margin: 25px 0 15px 0; border-bottom: 1px solid var(--samp-yellow); padding-bottom: 8px;">
+                🐟 Catchable Items
+            </h3>
+            
+            <table class="system-table">
+                <thead>
+                    <tr>
+                        <th>Item</th>
+                        <th>Use</th>
+                        <th>Value</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Fish</strong></td>
+                        <td>Cook to heal</td>
+                        <td>Medium</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Small Fish</strong></td>
+                        <td>Direct healing</td>
+                        <td>Low</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Big Fish</strong></td>
+                        <td>Cook to heal</td>
+                        <td>High</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Rainbow Fish</strong></td>
+                        <td>Trade for Hemp Seed</td>
+                        <td>Rare</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Golden Fish</strong></td>
+                        <td>Direct healing</td>
+                        <td>Very High</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Blob of Seaweed</strong></td>
+                        <td>Craft Garnished Sandwich, Narcotic Salad</td>
+                        <td>Special</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <div class="success-box">
+                <div class="success-title">🎯 STRATEGY TIPS</div>
+                <div class="step">
+                    <div class="step-number">👥</div>
+                    <span><strong>Team up:</strong> Driver + Fisher = Maximum efficiency. Coordinate with friends!</span>
+                </div>
+                <div class="step">
+                    <div class="step-number">📈</div>
+                    <span><strong>Level first:</strong> Reduce fishing time before serious resource gathering.</span>
+                </div>
+                <div class="step">
+                    <div class="step-number">💰</div>
+                    <span><strong>Sell smart:</strong> Check market prices before selling. Timing is everything!</span>
+                </div>
+                <div class="step">
+                    <div class="step-number">⚗️</div>
+                    <span><strong>Craft wisely:</strong> Some items are better used than sold. Plan your economy!</span>
+                </div>
+            </div>
+        </section>
+        
+        <!-- NEW: HOUSING SYSTEM SECTION - Without pictures -->
+        <section id="housing" class="section section-housing">
+            <h2 class="section-title">
+                <span class="section-icon">🏠</span>
+                HOUSING SYSTEM <span class="section-counter">4</span>
+            </h2>
+            
+            <p>Ever thought of roleplaying that your character owns a house? One in which he lives while he is not fighting in the war? Well, you can go and buy a house right now! Search around the map and you will find numerous houses that you can buy.</p>
+            
+            <div class="info-box">
+                <div class="info-title">🏡 ACQUIRING PROPERTY</div>
+                <div class="command-box">
+                    <div class="command">/buyhouse</div>
+                    <div class="command-desc">Purchase an available house property. Look for houses marked for sale on the map!</div>
+                </div>
+            </div>
+            
+            <h3 style="color: var(--samp-orange); margin: 25px 0 15px 0; border-bottom: 1px solid var(--samp-orange); padding-bottom: 8px;">
+                🛠️ House Management Commands
+            </h3>
+            
+            <div class="items-grid">
+                <div class="command-box">
+                    <div class="command">/house store</div>
+                    <div class="command-desc">Store an item inside your house</div>
+                </div>
+                <div class="command-box">
+                    <div class="command">/house storage</div>
+                    <div class="command-desc">View house storage and withdraw items</div>
+                </div>
+                <div class="command-box">
+                    <div class="command">/house lock</div>
+                    <div class="command-desc">Lock your house for security</div>
+                </div>
+                <div class="command-box">
+                    <div class="command">/house furniture</div>
+                    <div class="command-desc">Build, move or destroy furniture</div>
+                </div>
+                <div class="command-box">
+                    <div class="command">/house upgrade</div>
+                    <div class="command-desc">Upgrade house area to warehouse interior</div>
+                </div>
+                <div class="command-box">
+                    <div class="command">/wardrobe</div>
+                    <div class="command-desc">Access house wardrobe (saves items & positions)</div>
+                </div>
+                <div class="command-box">
+                    <div class="command">/house upgradewardrobe</div>
+                    <div class="command-desc">Increase wardrobe clothing slots</div>
+                </div>
+                <div class="command-box">
+                    <div class="command">/house entrance</div>
+                    <div class="command-desc">Set custom entrance point</div>
+                </div>
+                <div class="command-box">
+                    <div class="command">/house refresh</div>
+                    <div class="command-desc">Refresh house furniture if not displaying</div>
+                </div>
+            </div>
+            
+            <div class="warning-box">
+                <div class="warning-title">⚠️ UPGRADE REQUIREMENTS</div>
+                <div class="step">
+                    <div class="step-number">📦</div>
+                    <span><strong>Materials Needed:</strong> 500 Wood + 100 Metal</span>
+                </div>
+                <div class="step">
+                    <div class="step-number">🏗️</div>
+                    <span><strong>Result:</strong> Warehouse-style interior with expanded storage capacity</span>
+                </div>
+                <p style="margin-top: 10px;"><em>Note: There is only one interior to which you can upgrade - the warehouse interior.</em></p>
+            </div>
+            
+            <div class="success-box">
+                <div class="success-title">⭐ CUSTOM PROPERTY OPTION</div>
+                <div class="step">
+                    <div class="step-number">💰</div>
+                    <span><strong>Donate 15 CAD</strong> to the server for a fully customizable property</span>
+                </div>
+                <div class="step">
+                    <div class="step-number">📍</div>
+                    <span><strong>Location Choice:</strong> The custom property's place is entirely up to you!</span>
+                </div>
+                <div class="step">
+                    <div class="step-number">🎨</div>
+                    <span><strong>Full Control:</strong> Choose your perfect location and setup</span>
+                </div>
+            </div>
+        </section>
+        
+        <!-- NEW: MARKET SYSTEM SECTION - Without pictures -->
+        <section id="market" class="section section-market">
+            <h2 class="section-title">
+                <span class="section-icon">🏪</span>
+                MARKET SYSTEM <span class="section-counter">5</span>
+            </h2>
+            
+            <p>The wartime market is where all commerce takes place. Buy, sell, and trade with other players in the designated green zone on your map.</p>
+            
+            <div class="info-box">
+                <div class="info-title">📍 MARKET LOCATION</div>
+                <div class="step">
+                    <div class="step-number">🗺️</div>
+                    <span>Look for the <strong>green zone</strong> on your map - this is the designated trading area where all commerce takes place.</span>
+                </div>
+            </div>
+            
+            <h3 style="color: var(--samp-yellow); margin: 25px 0 15px 0; border-bottom: 1px solid var(--samp-yellow); padding-bottom: 8px;">
+                📋 General Market Commands
+            </h3>
+            
+            <div class="items-grid">
+                <div class="command-box">
+                    <div class="command">/stallhelp</div>
+                    <div class="command-desc">Display all available market stall commands</div>
+                </div>
+                <div class="command-box">
+                    <div class="command">/checkinv [id]</div>
+                    <div class="command-desc">Inspect another player's inventory before trading</div>
+                </div>
+                <div class="command-box">
+                    <div class="command">/checkmoney</div>
+                    <div class="command-desc">View a player's available currency</div>
+                </div>
+            </div>
+            
+            <h3 style="color: var(--samp-yellow); margin: 25px 0 15px 0; border-bottom: 1px solid var(--samp-yellow); padding-bottom: 8px;">
+                🛒 Setting Up Your Stall
+            </h3>
+            
+            <div class="step">
+                <div class="step-number">1</div>
+                <span>Find an empty stall in the market area</span>
+            </div>
+            <div class="step">
+                <div class="step-number">2</div>
+                <span>Claim it with <span class="command">/usestall</span></span>
+            </div>
+            <div class="step">
+                <div class="step-number">3</div>
+                <span>Set your prices with <span class="command">/stallprice [price]</span></span>
+            </div>
+            <div class="step">
+                <div class="step-number">4</div>
+                <span>Stock your goods with <span class="command">/stockstall [amount] [item]</span></span>
+            </div>
+            
+            <div class="success-box">
+                <div class="success-title">💰 Purchasing & Payment Process</div>
+                <div class="step">
+                    <div class="step-number">🛍️</div>
+                    <span><strong>Buyers</strong> use <span class="command">/marketbuy [amount]</span> to purchase from stalls</span>
+                </div>
+                <div class="step">
+                    <div class="step-number">💸</div>
+                    <span><strong>Sellers</strong> receive earnings notification when items sell</span>
+                </div>
+                <div class="step">
+                    <div class="step-number">🏦</div>
+                    <span>Visit the market counter and use <span class="command">/cashout</span> to collect your money</span>
+                </div>
+            </div>
+            
+            <h3 style="color: var(--samp-yellow); margin: 25px 0 15px 0; border-bottom: 1px solid var(--samp-yellow); padding-bottom: 8px;">
+                ⚙️ Stall Management Commands
+            </h3>
+            
+            <div class="items-grid">
+                <div class="command-box">
+                    <div class="command">/usestall</div>
+                    <div class="command-desc">Claim an unclaimed market stall</div>
+                </div>
+                <div class="command-box">
+                    <div class="command">/stallprice [price]</div>
+                    <div class="command-desc">Set selling price for your goods</div>
+                </div>
+                <div class="command-box">
+                    <div class="command">/stockstall [amount] [item]</div>
+                    <div class="command-desc">Add items to your stall inventory</div>
+                </div>
+                <div class="command-box">
+                    <div class="command">/emptystall</div>
+                    <div class="command-desc">Remove all items and shut down operations</div>
+                </div>
+                <div class="command-box">
+                    <div class="command">/cashout</div>
+                    <div class="command-desc">Collect your earnings at market counter</div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- NEW: FORAGING SYSTEM SECTION - Without pictures -->
+        <section id="foraging" class="section section-foraging">
+            <h2 class="section-title">
+                <span class="section-icon">🌿</span>
+                FORAGING SYSTEM <span class="section-counter">6</span>
+            </h2>
+            
+            <p>The wilderness provides essential resources for survival and warfare. Master the art of scavenging to find medicinal plants, craft survival tools, and create tactical equipment.</p>
+            
+            <div class="info-box">
+                <div class="info-title">📍 Foraging Locations</div>
+                <table class="system-table">
+                    <thead>
+                        <tr>
+                            <th>Location</th>
+                            <th>Resources Available</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Forest Area</strong></td>
+                            <td>Edible plants & forest poisons</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Mountain Region</strong></td>
+                            <td>Mountain poisons & rare herbs</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Desert Zone</strong></td>
+                            <td>Desert poisons & arid plants</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <h3 style="color: var(--samp-teal); margin: 25px 0 15px 0; border-bottom: 1px solid var(--samp-teal); padding-bottom: 8px;">
+                🍃 Collectible Resources
+            </h3>
+            
+            <div class="items-grid">
+                <div class="item-card">
+                    <div class="item-name">Edible Plants</div>
+                    <div class="item-quantity">Natural food sources for health & stamina</div>
+                </div>
+                <div class="item-card">
+                    <div class="item-name">Forest Poisons</div>
+                    <div class="item-quantity">Toxic materials from woodland areas</div>
+                </div>
+                <div class="item-card">
+                    <div class="item-name">Mountain Poisons</div>
+                    <div class="item-quantity">Rare toxic compounds from highlands</div>
+                </div>
+                <div class="item-card">
+                    <div class="item-name">Desert Poisons</div>
+                    <div class="item-quantity">Arid-region toxins with unique properties</div>
+                </div>
+                <div class="item-card">
+                    <div class="item-name">Antidotes & Cures</div>
+                    <div class="item-quantity">Natural remedies to counter poison effects</div>
+                </div>
+            </div>
+            
+            <div class="success-box">
+                <div class="success-title">⚗️ Craftable Items</div>
+                <div class="step">
+                    <div class="step-number">🎯</div>
+                    <span><strong>Bomber Target Flares</strong> - Mark strategic bombing locations</span>
+                </div>
+                <div class="step">
+                    <div class="step-number">📡</div>
+                    <span><strong>Signal Flares</strong> - Communication tools for coordinating operations</span>
+                </div>
+                <div class="step">
+                    <div class="step-number">🆘</div>
+                    <span><strong>Distress Flares</strong> - Emergency signaling devices</span>
+                </div>
+                <div class="step">
+                    <div class="step-number">🧪</div>
+                    <span><strong>Rare Mixtures</strong> - Advanced compounds with special properties</span>
+                </div>
+            </div>
+            
+            <div class="info-box">
+                <div class="info-title">🎯 CRAFTING STRATEGY</div>
+                <div class="step">
+                    <div class="step-number">🔍</div>
+                    <span><strong>Can't find specific materials?</strong> You can often craft them using combinations of other foraged resources.</span>
+                </div>
+                <div class="step">
+                    <div class="step-number">⚗️</div>
+                    <span><strong>Combine different poisons</strong> for unique effects and powerful mixtures.</span>
+                </div>
+                <div class="step">
+                    <div class="step-number">💎</div>
+                    <span><strong>Save rare herbs</strong> for special mixtures that can't be crafted otherwise.</span>
+                </div>
+            </div>
+        </section>
+        
+        <!-- WAREHOUSES SECTION - Existing with pictures -->
         <section id="warehouses" class="section">
             <h2 class="section-title">
                 <span class="section-icon">🏭</span>
-                WAREHOUSE SYSTEM
+                WAREHOUSE SYSTEM <span class="section-counter">7</span>
             </h2>
             
             <p>Wood storage depends on your faction and faction tier clearance level.</p>
@@ -586,17 +1260,87 @@
                 <div class="command-desc">Store items in warehouse</div>
             </div>
             
+            <div class="command-box">
+                <div class="command">/warehouselogs</div>
+                <div class="command-desc">See logs of warehouse activity (deposits/withdraws/discards)</div>
+            </div>
+            
             <div class="warning-box">
                 <div class="warning-title">⚠️ ACCESS REQUIREMENTS</div>
                 <p>Each warehouse displays its required clearance level. You must meet or exceed this requirement to access.</p>
             </div>
+            
+            <div class="info-box">
+                <div class="info-title">📊 WAREHOUSE TYPES</div>
+                <table class="system-table">
+                    <thead>
+                        <tr>
+                            <th>Type</th>
+                            <th>Access</th>
+                            <th>Clearance</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Faction Warehouse</strong></td>
+                            <td>Faction members</td>
+                            <td>Varies by faction</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Clan Warehouse</strong></td>
+                            <td>Clan members</td>
+                            <td>Tier-based access</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="warning-box">
+                <div class="warning-title">📦 STORAGE LIMITS</div>
+                <div class="step">
+                    <div class="step-number">🔢</div>
+                    <span><strong>Item types:</strong> 100 different items maximum</span>
+                </div>
+                <div class="step">
+                    <div class="step-number">∞</div>
+                    <span><strong>Quantity:</strong> Unlimited per item type</span>
+                </div>
+                <div class="step">
+                    <div class="step-number">💡</div>
+                    <span><strong>Example:</strong> 1,000 blue caps OK, 1,000 different caps NOT OK</span>
+                </div>
+            </div>
+            
+            <div class="success-box">
+                <div class="success-title">🎯 MANAGEMENT TIPS</div>
+                <div class="step">
+                    <div class="step-number">📂</div>
+                    <span>Organize items by type for easy finding</span>
+                </div>
+                <div class="step">
+                    <div class="step-number">🔐</div>
+                    <span>Check clearance before traveling to warehouse</span>
+                </div>
+                <div class="step">
+                    <div class="step-number">📦</div>
+                    <span>Bulk store common materials for efficiency</span>
+                </div>
+                <div class="step">
+                    <div class="step-number">💎</div>
+                    <span>Keep rare items in secure, high-clearance warehouses</span>
+                </div>
+                <div class="step">
+                    <div class="step-number">📝</div>
+                    <span>Keep track of who deposits/withdraws/discards items using /warehouselogs</span>
+                </div>
+            </div>
         </section>
         
-        <!-- SIDE QUESTS SECTION -->
+        <!-- SIDE QUESTS SECTION - Existing with pictures -->
         <section id="sidequests" class="section">
             <h2 class="section-title">
                 <span class="section-icon">📋</span>
-                SIDE QUEST SYSTEM
+                SIDE QUEST SYSTEM <span class="section-counter">8</span>
             </h2>
             
             <p>Side quests are secondary tasks given by NPCs (Actors) found on islands outside San Andreas. Each task offers unique rewards including items, money, and furniture materials.</p>
@@ -638,6 +1382,9 @@
         </section>
     </div>
     
+    <!-- Scroll to top button -->
+    <div class="scroll-top" id="scrollTop" onclick="scrollToTop()">↑</div>
+    
     <!-- Lightbox Modal -->
     <div id="lightboxModal" class="lightbox-modal">
         <span class="close-lightbox" onclick="closeLightbox()">&times;</span>
@@ -648,8 +1395,8 @@
     <!-- Footer -->
     <footer>
         <div class="footer-text">
-            <p>🎮 TWS SA:MP Server Guide v1.0 | Images hosted on ImageBB</p>
-            <p style="margin-top: 10px; font-size: 0.8rem; color: #666;">Click on any image to view full size | Mobile Responsive Design</p>
+            <p>🎮 TWS SA:MP Server Guide v2.0 | Complete Systems Guide</p>
+            <p style="margin-top: 10px; font-size: 0.8rem; color: #666;">Click on any image to view full size | Mobile Responsive Design | 8 Complete Systems</p>
         </div>
     </footer>
 
@@ -699,21 +1446,27 @@
             });
         });
         
-        // Mobile menu toggle (if needed later)
-        let isMobileMenuOpen = false;
-        
-        // Add active class to current section in view
+        // Show/Hide scroll to top button
         window.addEventListener('scroll', function() {
+            const scrollTopBtn = document.getElementById('scrollTop');
             const sections = document.querySelectorAll('.section');
             const navLinks = document.querySelectorAll('nav a');
             
+            // Scroll to top button
+            if (window.pageYOffset > 300) {
+                scrollTopBtn.style.display = 'flex';
+            } else {
+                scrollTopBtn.style.display = 'none';
+            }
+            
+            // Active section highlighting
             let currentSection = '';
             
             sections.forEach(section => {
                 const sectionTop = section.offsetTop - 100;
                 const sectionHeight = section.clientHeight;
                 
-                if (scrollY >= sectionTop && scrollY < sectionTop + sectionHeight) {
+                if (window.pageYOffset >= sectionTop && window.pageYOffset < sectionTop + sectionHeight) {
                     currentSection = section.getAttribute('id');
                 }
             });
@@ -724,6 +1477,46 @@
                     link.classList.add('active');
                 }
             });
+        });
+        
+        // Scroll to top function
+        function scrollToTop() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+        
+        // Add animation to section counters
+        document.addEventListener('DOMContentLoaded', function() {
+            const counters = document.querySelectorAll('.section-counter');
+            counters.forEach((counter, index) => {
+                // Add slight delay for sequential animation
+                setTimeout(() => {
+                    counter.style.animation = 'counterPop 0.5s ease-out';
+                }, index * 100);
+            });
+            
+            // Add hover effects to command boxes
+            const commandBoxes = document.querySelectorAll('.command-box');
+            commandBoxes.forEach(box => {
+                box.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateX(5px)';
+                });
+                box.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateX(0)';
+                });
+            });
+        });
+        
+        // Keyboard navigation for lightbox
+        document.addEventListener('keydown', function(e) {
+            const lightbox = document.getElementById('lightboxModal');
+            if (lightbox.style.display === 'flex') {
+                if (e.key === 'Escape' || e.key === 'Esc') {
+                    closeLightbox();
+                }
+            }
         });
     </script>
 </body>
