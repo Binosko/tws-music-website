@@ -121,3 +121,78 @@ async function uploadSong() {
         if (uploadSpinner) uploadSpinner.style.display = 'none';
     }
 }
+
+// ==================== GLOBAL FUNCTIONS ====================
+// These MUST be global for onclick to work
+
+window.showTab = function(tabName) {
+    console.log('Showing tab:', tabName);
+    
+    // Hide all tabs
+    document.querySelectorAll('.tab-content').forEach(tab => {
+        tab.classList.remove('active');
+    });
+    
+    // Remove active from all buttons
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    
+    // Show selected tab
+    const tab = document.getElementById(tabName);
+    if (tab) {
+        tab.classList.add('active');
+    }
+    
+    // Activate clicked button
+    const buttons = document.querySelectorAll('.tab-btn');
+    buttons.forEach(btn => {
+        if (btn.textContent.includes(tabName) || btn.getAttribute('onclick')?.includes(tabName)) {
+            btn.classList.add('active');
+        }
+    });
+    
+    // Update library if needed
+    if (tabName === 'library') {
+        renderSongList();
+    }
+};
+
+window.saveSettings = function() {
+    const displayName = document.getElementById('displayName')?.value.trim() || 'Anonymous';
+    localStorage.setItem('tws_displayName', displayName);
+    
+    const userInfo = document.getElementById('userInfo');
+    if (userInfo) userInfo.textContent = `👤 ${displayName}`;
+    
+    const status = document.getElementById('settingsStatus');
+    if (status) {
+        status.innerHTML = `✅ Settings saved!`;
+        status.style.display = 'block';
+        setTimeout(() => status.style.display = 'none', 3000);
+    }
+};
+
+window.uploadSong = async function() {
+    // ... (keep the upload function you have) ...
+};
+
+window.copyUrl = function(url) {
+    navigator.clipboard.writeText(url).then(() => {
+        alert('✅ URL copied!');
+    });
+};
+
+window.showSuccessModal = function(url) {
+    const modal = document.getElementById('successModal');
+    const urlDisplay = document.getElementById('successUrl');
+    if (modal && urlDisplay) {
+        urlDisplay.textContent = url;
+        modal.style.display = 'flex';
+    }
+};
+
+window.closeModal = function() {
+    const modal = document.getElementById('successModal');
+    if (modal) modal.style.display = 'none';
+};
