@@ -3,183 +3,586 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SA:MP Music Streamer</title>
-    <link rel="stylesheet" href="styles.css">
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎵</text></svg>">
+    <title>TWS Music Streamer - SA:MP Music Streaming</title>
+    <style>
+        /* Reset & Base */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: white;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        /* Container */
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: rgba(30, 30, 46, 0.9);
+            border-radius: 15px;
+            padding: 0;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+        }
+        
+        /* Header */
+        header {
+            background: linear-gradient(135deg, #0f3460 0%, #1a1a2e 100%);
+            padding: 30px;
+            text-align: center;
+            border-bottom: 3px solid #00adb5;
+        }
+        
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            color: #00adb5;
+        }
+        
+        .subtitle {
+            color: #8f9ba8;
+            font-size: 1.2rem;
+        }
+        
+        /* Navigation */
+        nav {
+            display: flex;
+            background: #16213e;
+            border-bottom: 2px solid #0f3460;
+        }
+        
+        .nav-btn {
+            flex: 1;
+            padding: 20px;
+            background: none;
+            border: none;
+            color: #8f9ba8;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .nav-btn:hover {
+            background: rgba(0, 173, 181, 0.1);
+            color: #00adb5;
+        }
+        
+        .nav-btn.active {
+            background: #00adb5;
+            color: white;
+            font-weight: bold;
+        }
+        
+        /* Content */
+        .content {
+            padding: 40px;
+            min-height: 500px;
+        }
+        
+        .tab {
+            display: none;
+            animation: fadeIn 0.5s;
+        }
+        
+        .tab.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        /* Cards */
+        .card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(0, 173, 181, 0.2);
+        }
+        
+        h2 {
+            color: #00adb5;
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+        }
+        
+        h3 {
+            color: #8f9ba8;
+            margin: 20px 0 10px 0;
+        }
+        
+        /* Song List */
+        .song-list {
+            margin-top: 30px;
+        }
+        
+        .song-item {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 20px;
+            border-left: 4px solid #00adb5;
+            transition: transform 0.3s;
+        }
+        
+        .song-item:hover {
+            transform: translateX(5px);
+            background: rgba(255, 255, 255, 0.08);
+        }
+        
+        .song-name {
+            font-size: 1.4rem;
+            color: white;
+            margin-bottom: 10px;
+        }
+        
+        .song-url {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 12px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            word-break: break-all;
+            margin: 15px 0;
+            color: #8f9ba8;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        /* Buttons */
+        .btn {
+            background: linear-gradient(135deg, #00adb5 0%, #0097a7 100%);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: bold;
+            transition: all 0.3s;
+            display: inline-block;
+            text-decoration: none;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 173, 181, 0.4);
+        }
+        
+        .btn-secondary {
+            background: transparent;
+            border: 2px solid #00adb5;
+            color: #00adb5;
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(0, 173, 181, 0.1);
+        }
+        
+        /* Instructions */
+        .instructions {
+            background: rgba(0, 173, 181, 0.1);
+            border-left: 4px solid #00adb5;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        
+        code {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: monospace;
+            color: #00adb5;
+        }
+        
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 30px;
+            color: #8f9ba8;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            margin-top: 40px;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                border-radius: 10px;
+                margin: 10px;
+            }
+            
+            nav {
+                flex-direction: column;
+            }
+            
+            .nav-btn {
+                padding: 15px;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 2.2rem;
+            }
+        }
+    </style>
 </head>
 <body>
     <div class="container">
         <header>
-            <div class="header-content">
-                <h1>🎵 SA:MP Music Streamer</h1>
-                <p class="subtitle">Upload & stream MP3 files for GTA San Andreas Multiplayer</p>
-            </div>
-            <div class="user-info" id="userInfo">Guest</div>
+            <h1>🎵 TWS Music Streamer</h1>
+            <p class="subtitle">Stream MP3 files in GTA San Andreas Multiplayer</p>
         </header>
-
-<nav class="tabs">
-    <button class="tab-btn active" onclick="showTab('home')">
-        <span>🏠</span> Home
-    </button>
-    <button class="tab-btn" onclick="showTab('upload')">
-        <span>📤</span> Upload
-    </button>
-    <button class="tab-btn" onclick="showTab('library')">
-        <span>📚</span> Library
-    </button>
-    <button class="tab-btn" onclick="showTab('settings')">
-        <span>⚙️</span> Settings
-    </button>
-</nav>
-
-        <main>
+        
+        <nav>
+            <button class="nav-btn active" onclick="showTab('home')">🏠 Home</button>
+            <button class="nav-btn" onclick="showTab('songs')">📀 Songs</button>
+            <button class="nav-btn" onclick="showTab('upload')">📤 Upload</button>
+            <button class="nav-btn" onclick="showTab('help')">❓ Help</button>
+        </nav>
+        
+        <div class="content">
             <!-- HOME TAB -->
-            <section id="home" class="tab-content active">
+            <div id="home" class="tab active">
                 <div class="card">
-                    <h2>Welcome to SA:MP Music Streaming!</h2>
-                    <p>Upload MP3 files and get permanent streaming links for GTA San Andreas Multiplayer.</p>
+                    <h2>Welcome to TWS Music Streaming</h2>
+                    <p>This website provides permanent MP3 streaming links for GTA San Andreas Multiplayer.</p>
                     
-                    <div class="features">
-                        <div class="feature">
-                            <div class="feature-icon">🎵</div>
-                            <h3>Free Storage</h3>
-                            <p>All files stored with permanent links</p>
-                        </div>
-                        <div class="feature">
-                            <div class="feature-icon">🔗</div>
-                            <h3>Permanent Links</h3>
-                            <p>Get URLs that work forever in SA:MP</p>
-                        </div>
-                        <div class="feature">
-                            <div class="feature-icon">👤</div>
-                            <h3>Display Names</h3>
-                            <p>Set your display name as uploader</p>
-                        </div>
-                    </div>
-
                     <div class="instructions">
                         <h3>How to Use:</h3>
-                        <ol>
-                            <li><strong>Set Display Name:</strong> Go to Settings tab</li>
-                            <li><strong>Upload MP3:</strong> Go to Upload tab</li>
-                            <li><strong>Copy URL:</strong> Go to Library tab</li>
-                            <li><strong>Use in SA:MP:</strong> Use the copied URL</li>
+                        <ol style="margin-left: 20px; line-height: 1.8;">
+                            <li>Go to the <strong>Songs</strong> tab to browse available music</li>
+                            <li>Click <strong>"Copy URL"</strong> on any song</li>
+                            <li>In SA:MP, type: <code>/stream [URL]</code></li>
+                            <li>Enjoy your music in-game!</li>
                         </ol>
                     </div>
-
-                    <div class="info-box">
-                        <strong>📝 Note:</strong>
-                        <ul>
-                            <li>Upload password required</li>
-                            <li>Max file size: 100MB per song</li>
-                            <li>Only upload music you have rights to</li>
-                        </ul>
+                    
+                    <div style="margin-top: 30px; display: flex; gap: 15px;">
+                        <button class="btn" onclick="showTab('songs')">Browse Songs</button>
+                        <button class="btn btn-secondary" onclick="showTab('help')">View Tutorial</button>
                     </div>
                 </div>
-            </section>
-
-            <!-- UPLOAD TAB -->
-            <section id="upload" class="tab-content">
+                
                 <div class="card">
-                    <h2>📤 Upload MP3</h2>
-                    <p class="card-subtitle">Upload MP3 files and get streaming URLs</p>
-                    
-                    <div class="upload-form">
-                        <div class="form-group">
-                            <label for="shortName">Short Name *</label>
-                            <input type="text" id="shortName" placeholder="Example: Binosko-Theme-A" maxlength="50">
-                            <small>No spaces. Use letters, numbers, and dashes only.</small>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="mp3File">MP3 File *</label>
-                            <div class="file-upload">
-                                <input type="file" id="mp3File" accept=".mp3,.MP3" onchange="showFileInfo()">
-                                <div id="fileInfo"></div>
-                            </div>
-                            <small>Maximum file size: 100MB. Only MP3 files allowed.</small>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="uploadPassword">Upload Password *</label>
-                            <input type="password" id="uploadPassword" placeholder="Enter upload password">
-                        </div>
-                        
-                        <button id="uploadBtn" class="primary-btn" onclick="uploadSong()">
-                            <span id="uploadText">Upload Song</span>
-                            <div id="uploadSpinner" class="spinner" style="display: none;"></div>
-                        </button>
+                    <h3>Recent Additions</h3>
+                    <div id="recentSongs" style="color: #8f9ba8;">
+                        Loading recent songs...
                     </div>
-                    
-                    <div id="uploadStatus" class="status-box"></div>
                 </div>
-            </section>
-
-            <!-- LIBRARY TAB -->
-            <section id="library" class="tab-content">
+            </div>
+            
+            <!-- SONGS TAB -->
+            <div id="songs" class="tab">
                 <div class="card">
-                    <h2>📚 Music Library</h2>
-                    <p class="card-subtitle">Browse all uploaded songs</p>
+                    <h2>Music Library</h2>
+                    <p>All songs are stored on GitHub with permanent URLs.</p>
                     
-                    <div class="library-controls">
-                        <div class="search-container">
-                            <input type="text" id="searchInput" placeholder="Search songs..." oninput="searchSongs()">
-                            <div class="search-icon">🔍</div>
-                        </div>
-                        <div class="stats">
-                            <span id="songCount">0</span> songs
-                        </div>
+                    <div style="margin: 20px 0;">
+                        <input type="text" id="searchBox" placeholder="🔍 Search songs..." 
+                               style="width: 100%; padding: 12px; border-radius: 5px; border: 1px solid #00adb5; background: rgba(0,0,0,0.3); color: white; font-size: 1rem;">
                     </div>
                     
                     <div id="songList" class="song-list">
-                        <div class="empty-state">
-                            <div class="empty-icon">📭</div>
-                            <h3>No songs uploaded yet</h3>
-                            <p>Be the first to upload a song!</p>
-                            <button class="secondary-btn" onclick="showTab('upload')">Upload First Song</button>
+                        <div style="text-align: center; padding: 40px; color: #8f9ba8;">
+                            Loading songs from GitHub...
                         </div>
                     </div>
                 </div>
-            </section>
-
-            <!-- SETTINGS TAB -->
-            <section id="settings" class="tab-content">
+            </div>
+            
+            <!-- UPLOAD TAB -->
+            <div id="upload" class="tab">
                 <div class="card">
-                    <h2>⚙️ Settings</h2>
+                    <h2>Upload Music</h2>
+                    <p>To add songs to the library:</p>
                     
-                    <div class="settings-form">
-                        <div class="form-group">
-                            <label for="displayName">Display Name</label>
-                            <input type="text" id="displayName" placeholder="Enter your display name">
-                            <small>This name will appear next to your uploaded songs.</small>
-                        </div>
-                        
-                        <button class="primary-btn" onclick="saveSettings()">Save Settings</button>
-                        
-                        <div id="settingsStatus" class="status-box"></div>
+                    <div class="instructions">
+                        <h3>Method 1: GitHub Upload (Recommended)</h3>
+                        <ol style="margin-left: 20px; margin-bottom: 20px; line-height: 1.8;">
+                            <li>Go to the TWS Music Storage repository on GitHub</li>
+                            <li>Click "Add file" → "Upload files"</li>
+                            <li>Drag & drop your MP3 file</li>
+                            <li>Name it properly (no spaces, use dashes)</li>
+                            <li>Click "Commit changes"</li>
+                        </ol>
+                        <button class="btn" onclick="window.open('https://github.com/binosko/tws-music-storage/upload/main', '_blank')">
+                            📤 Go to GitHub Upload
+                        </button>
+                    </div>
+                    
+                    <div class="instructions">
+                        <h3>Method 2: Request Upload</h3>
+                        <p>If you don't have GitHub access, contact the admin with:</p>
+                        <ul style="margin-left: 20px; line-height: 1.8;">
+                            <li>Your MP3 file</li>
+                            <li>Desired song name</li>
+                            <li>Your display name (optional)</li>
+                        </ul>
+                    </div>
+                    
+                    <div style="margin-top: 30px; padding: 20px; background: rgba(255,255,255,0.05); border-radius: 5px;">
+                        <h3>Naming Rules:</h3>
+                        <ul style="margin-left: 20px; line-height: 1.8;">
+                            <li>Use only letters, numbers, and dashes</li>
+                            <li>No spaces (use dashes instead)</li>
+                            <li>Example: <code>my-cool-song.mp3</code></li>
+                            <li>Max file size: 100MB</li>
+                        </ul>
                     </div>
                 </div>
-            </section>
-        </main>
-
+            </div>
+            
+            <!-- HELP TAB -->
+            <div id="help" class="tab">
+                <div class="card">
+                    <h2>SA:MP Streaming Guide</h2>
+                    
+                    <div class="instructions">
+                        <h3>Step-by-Step Tutorial:</h3>
+                        <ol style="margin-left: 20px; line-height: 1.8;">
+                            <li><strong>Find a song</strong> in the Songs tab</li>
+                            <li><strong>Copy the URL</strong> by clicking "Copy URL" button</li>
+                            <li><strong>In SA:MP</strong>, open chat and type:
+                                <div style="margin: 10px 0; padding: 10px; background: rgba(0,0,0,0.3); border-radius: 5px;">
+                                    <code>/stream PASTE_YOUR_URL_HERE</code>
+                                </div>
+                            </li>
+                            <li>Press Enter - the music will start playing!</li>
+                        </ol>
+                    </div>
+                    
+                    <div style="margin: 30px 0;">
+                        <h3>Troubleshooting:</h3>
+                        <div style="background: rgba(255,0,0,0.1); padding: 15px; border-radius: 5px; border-left: 4px solid #ff5555;">
+                            <p><strong>If music doesn't play:</strong></p>
+                            <ul style="margin-left: 20px; line-height: 1.8;">
+                                <li>Make sure URL starts with <code>https://</code></li>
+                                <li>URL must end with <code>.mp3</code></li>
+                                <li>Some servers may have streaming disabled</li>
+                                <li>Try a different song to test</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <h3>Example SA:MP Command:</h3>
+                        <div class="song-url" style="font-size: 1rem;">
+                            /stream https://raw.githubusercontent.com/binosko/tws-music-storage/main/example-song.mp3
+                        </div>
+                        <button class="btn" onclick="copyExampleUrl()" style="margin-top: 10px;">
+                            Copy Example Command
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
         <footer>
-            <p>SA:MP Music Streamer • Upload your MP3s for streaming</p>
+            <p>TWS Music Streamer • All songs stored on GitHub • Permanent URLs for SA:MP</p>
+            <p style="margin-top: 10px; font-size: 0.9rem; color: #666;">
+                Use command: <code>/stream [URL]</code> in SA:MP to play music
+            </p>
         </footer>
     </div>
 
-    <!-- Success Modal -->
-    <div id="successModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-icon">✅</div>
-            <h3>Upload Successful!</h3>
-            <div class="url-display" id="successUrl"></div>
-            <div class="modal-actions">
-                <button class="primary-btn" onclick="copySuccessUrl()">Copy URL</button>
-                <button class="secondary-btn" onclick="closeModal()">Close</button>
-            </div>
-        </div>
-    </div>
-
-    <script src="app.js"></script>
+    <script>
+        // ==================== SIMPLE, ERROR-FREE CODE ====================
+        
+        // Tab switching - SIMPLE and GUARANTEED to work
+        function showTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Remove active from all buttons
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Show selected tab
+            document.getElementById(tabName).classList.add('active');
+            
+            // Activate clicked button
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                if (btn.textContent.includes(tabName.charAt(0).toUpperCase() + tabName.slice(1)) || 
+                    btn.getAttribute('onclick').includes(tabName)) {
+                    btn.classList.add('active');
+                }
+            });
+            
+            // Load songs if songs tab
+            if (tabName === 'songs') {
+                loadSongs();
+            }
+        }
+        
+        // Load songs from GitHub - SIMPLE VERSION
+        async function loadSongs() {
+            const songList = document.getElementById('songList');
+            songList.innerHTML = '<div style="text-align: center; padding: 40px; color: #8f9ba8;">Loading songs...</div>';
+            
+            try {
+                // Use GitHub API to get files from repository
+                const response = await fetch('https://api.github.com/repos/binosko/tws-music-storage/contents/');
+                const files = await response.json();
+                
+                // Filter for MP3 files
+                const mp3Files = files.filter(file => 
+                    file.name.toLowerCase().endsWith('.mp3') && 
+                    file.type === 'file'
+                );
+                
+                if (mp3Files.length === 0) {
+                    songList.innerHTML = `
+                        <div style="text-align: center; padding: 40px; color: #8f9ba8;">
+                            <h3>No songs uploaded yet</h3>
+                            <p>Be the first to upload a song!</p>
+                            <button class="btn" onclick="showTab('upload')" style="margin-top: 20px;">
+                                How to Upload
+                            </button>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                // Display songs
+                let html = '';
+                mp3Files.forEach(file => {
+                    const songName = file.name.replace('.mp3', '').replace(/-/g, ' ');
+                    const rawUrl = `https://raw.githubusercontent.com/binosko/tws-music-storage/main/${file.name}`;
+                    
+                    html += `
+                        <div class="song-item">
+                            <div class="song-name">${songName}</div>
+                            <div class="song-url">${rawUrl}</div>
+                            <button class="btn" onclick="copyUrl('${rawUrl}')">Copy URL</button>
+                            <button class="btn btn-secondary" onclick="playPreview('${rawUrl}')" style="margin-left: 10px;">
+                                Play Preview
+                            </button>
+                        </div>
+                    `;
+                });
+                
+                songList.innerHTML = html;
+                
+                // Update recent songs on home page
+                updateRecentSongs(mp3Files.slice(0, 5));
+                
+                // Setup search
+                setupSearch();
+                
+            } catch (error) {
+                console.log('Error loading songs:', error);
+                songList.innerHTML = `
+                    <div style="text-align: center; padding: 40px; color: #ff5555;">
+                        <h3>Error loading songs</h3>
+                        <p>Check GitHub repository: tws-music-storage</p>
+                        <button class="btn" onclick="loadSongs()" style="margin-top: 20px;">
+                            Try Again
+                        </button>
+                    </div>
+                `;
+            }
+        }
+        
+        // Update recent songs on home page
+        function updateRecentSongs(recentFiles) {
+            const recentSongsDiv = document.getElementById('recentSongs');
+            
+            if (recentFiles.length === 0) {
+                recentSongsDiv.innerHTML = '<p>No songs uploaded yet. Be the first!</p>';
+                return;
+            }
+            
+            let html = '<div style="display: flex; flex-direction: column; gap: 10px;">';
+            recentFiles.forEach(file => {
+                const songName = file.name.replace('.mp3', '').replace(/-/g, ' ');
+                const rawUrl = `https://raw.githubusercontent.com/binosko/tws-music-storage/main/${file.name}`;
+                
+                html += `
+                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px; background: rgba(255,255,255,0.03); border-radius: 5px;">
+                        <span>${songName}</span>
+                        <button class="btn" onclick="copyUrl('${rawUrl}')" style="padding: 5px 15px; font-size: 0.9rem;">
+                            Copy
+                        </button>
+                    </div>
+                `;
+            });
+            html += '</div>';
+            
+            recentSongsDiv.innerHTML = html;
+        }
+        
+        // Setup search functionality
+        function setupSearch() {
+            const searchBox = document.getElementById('searchBox');
+            if (!searchBox) return;
+            
+            searchBox.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+                const songItems = document.querySelectorAll('.song-item');
+                
+                songItems.forEach(item => {
+                    const songText = item.textContent.toLowerCase();
+                    item.style.display = songText.includes(searchTerm) ? 'block' : 'none';
+                });
+            });
+        }
+        
+        // Copy URL to clipboard - SIMPLE and WORKS
+        function copyUrl(url) {
+            navigator.clipboard.writeText(url).then(() => {
+                alert('✅ URL copied to clipboard!\n\nUse in SA:MP:\n/stream ' + url);
+            }).catch(err => {
+                // Fallback for older browsers
+                const textArea = document.createElement('textarea');
+                textArea.value = url;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                alert('URL copied!\n\nUse in SA:MP:\n/stream ' + url);
+            });
+        }
+        
+        // Play audio preview
+        function playPreview(url) {
+            const audio = new Audio(url);
+            audio.volume = 0.5;
+            audio.play().catch(e => {
+                alert('Could not play preview. The URL might be valid for SA:MP streaming.');
+            });
+        }
+        
+        // Copy example URL
+        function copyExampleUrl() {
+            const exampleUrl = '/stream https://raw.githubusercontent.com/binosko/tws-music-storage/main/example-song.mp3';
+            copyUrl(exampleUrl);
+        }
+        
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load recent songs on home page
+            loadSongs();
+            
+            // Set current year in footer if needed
+            document.getElementById('currentYear').textContent = new Date().getFullYear();
+        });
+        
+        // Make functions globally available
+        window.showTab = showTab;
+        window.copyUrl = copyUrl;
+        window.playPreview = playPreview;
+        window.copyExampleUrl = copyExampleUrl;
+        window.loadSongs = loadSongs;
+        
+    </script>
 </body>
 </html>
