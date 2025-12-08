@@ -3,475 +3,728 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TWS Music Streamer - Azure Blob Storage</title>
+    <title>TWS SA:MP Server Guide - Mining & Resources</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: Arial, sans-serif;
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-            color: white;
-            min-height: 100vh;
-            padding: 20px;
+        /* SA:MP Dark Theme */
+        :root {
+            --samp-dark: #121212;
+            --samp-darker: #0a0a0a;
+            --samp-green: #4CAF50;
+            --samp-blue: #2196F3;
+            --samp-red: #f44336;
+            --samp-yellow: #FFD700;
+            --samp-text: #e0e0e0;
+            --samp-border: #333;
+            --samp-card: #1e1e1e;
         }
-        .container {
-            max-width: 1000px;
-            margin: 0 auto;
-            background: rgba(30, 30, 46, 0.9);
-            border-radius: 15px;
+        
+        * {
+            margin: 0;
             padding: 0;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-            overflow: hidden;
+            box-sizing: border-box;
         }
+        
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: var(--samp-darker);
+            color: var(--samp-text);
+            line-height: 1.6;
+            padding: 0;
+            overflow-x: hidden;
+        }
+        
+        /* Header & Navigation */
         header {
-            background: linear-gradient(135deg, #0f3460 0%, #1a1a2e 100%);
-            padding: 30px;
-            text-align: center;
-            border-bottom: 3px solid #00adb5;
+            background: linear-gradient(to right, var(--samp-dark), #1a3c1a);
+            padding: 1rem 2rem;
+            border-bottom: 3px solid var(--samp-green);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
         }
-        h1 { font-size: 2.8rem; margin-bottom: 10px; color: #00adb5; }
-        .subtitle { color: #8f9ba8; font-size: 1.2rem; }
         
-        /* Navigation */
-        nav { display: flex; background: #16213e; border-bottom: 2px solid #0f3460; }
-        .nav-btn {
-            flex: 1; padding: 20px; background: none; border: none;
-            color: #8f9ba8; font-size: 1.1rem; cursor: pointer; transition: all 0.3s;
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
         }
-        .nav-btn:hover { background: rgba(0, 173, 181, 0.1); color: #00adb5; }
-        .nav-btn.active { background: #00adb5; color: white; font-weight: bold; }
         
-        /* Content */
-        .content { padding: 40px; min-height: 500px; }
-        .tab { display: none; animation: fadeIn 0.5s; }
-        .tab.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        
-        /* Cards */
-        .card {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 10px;
-            padding: 30px;
-            margin-bottom: 30px;
-            border: 1px solid rgba(0, 173, 181, 0.2);
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
         }
-        h2 { color: #00adb5; margin-bottom: 20px; font-size: 1.8rem; }
-        h3 { color: #8f9ba8; margin: 20px 0 10px 0; }
         
-        /* Song List */
-        .song-list { margin-top: 30px; }
-        .song-item {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 10px;
-            padding: 25px;
-            margin-bottom: 20px;
-            border-left: 4px solid #00adb5;
+        .logo h1 {
+            color: var(--samp-green);
+            font-size: 1.8rem;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+        }
+        
+        .logo-icon {
+            font-size: 2rem;
+            color: var(--samp-yellow);
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        
+        nav a {
+            color: var(--samp-text);
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            transition: all 0.3s;
+            border: 1px solid transparent;
+        }
+        
+        nav a:hover {
+            background-color: rgba(76, 175, 80, 0.2);
+            border-color: var(--samp-green);
+            transform: translateY(-2px);
+        }
+        
+        /* Main Container */
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 20px;
+        }
+        
+        /* Sections */
+        .section {
+            background-color: var(--samp-card);
+            border-radius: 8px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border-left: 4px solid var(--samp-green);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
             transition: transform 0.3s;
         }
-        .song-item:hover { transform: translateX(5px); background: rgba(255, 255, 255, 0.08); }
-        .song-name { font-size: 1.4rem; color: white; margin-bottom: 10px; }
-        .song-url {
-            background: rgba(0, 0, 0, 0.3);
-            padding: 12px;
-            border-radius: 5px;
-            font-family: 'Courier New', monospace;
-            font-size: 0.9rem;
-            word-break: break-all;
+        
+        .section:hover {
+            transform: translateY(-5px);
+        }
+        
+        .section-title {
+            color: var(--samp-green);
+            border-bottom: 2px solid var(--samp-green);
+            padding-bottom: 10px;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .section-icon {
+            font-size: 1.5rem;
+        }
+        
+        /* Command Box */
+        .command-box {
+            background-color: var(--samp-dark);
+            border: 1px solid var(--samp-border);
+            border-radius: 6px;
+            padding: 15px;
             margin: 15px 0;
-            color: #8f9ba8;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            font-family: 'Courier New', monospace;
+            position: relative;
         }
         
-        /* Buttons */
-        .btn {
-            background: linear-gradient(135deg, #00adb5 0%, #0097a7 100%);
-            color: white; border: none; padding: 12px 25px;
-            border-radius: 5px; cursor: pointer; font-size: 1rem;
-            font-weight: bold; transition: all 0.3s; display: inline-block;
-            text-decoration: none;
+        .command {
+            color: var(--samp-yellow);
         }
-        .btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0, 173, 181, 0.4); }
-        .btn-secondary {
-            background: transparent; border: 2px solid #00adb5; color: #00adb5;
-        }
-        .btn-secondary:hover { background: rgba(0, 173, 181, 0.1); }
         
-        /* Form */
-        .form-group { margin-bottom: 20px; }
-        label { display: block; margin-bottom: 8px; color: #8f9ba8; }
-        input, select {
-            width: 100%; padding: 12px; border-radius: 5px;
-            border: 1px solid #00adb5; background: rgba(0, 0, 0, 0.3);
-            color: white; font-size: 1rem;
+        .command-desc {
+            color: #aaa;
+            font-size: 0.9rem;
+            margin-top: 5px;
         }
-        input:focus, select:focus { outline: none; border-color: #00adb5; box-shadow: 0 0 0 2px rgba(0, 173, 181, 0.3); }
         
-        /* Instructions */
-        .instructions {
-            background: rgba(0, 173, 181, 0.1);
-            border-left: 4px solid #00adb5;
+        /* Image Gallery */
+        .image-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .image-container {
+            position: relative;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 2px solid var(--samp-border);
+            transition: transform 0.3s;
+            background-color: #000;
+        }
+        
+        .image-container:hover {
+            transform: scale(1.02);
+            border-color: var(--samp-green);
+        }
+        
+        .guide-image {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            cursor: pointer;
+            display: block;
+        }
+        
+        .image-caption {
+            padding: 10px;
+            background-color: rgba(0,0,0,0.8);
+            text-align: center;
+            font-size: 0.9rem;
+            color: #ccc;
+        }
+        
+        /* Steps */
+        .step {
+            background-color: rgba(30, 30, 30, 0.8);
+            border-radius: 6px;
             padding: 20px;
             margin: 20px 0;
-            border-radius: 5px;
-        }
-        code {
-            background: rgba(0, 0, 0, 0.3);
-            padding: 2px 6px;
-            border-radius: 3px;
-            font-family: monospace;
-            color: #00adb5;
+            border-left: 3px solid var(--samp-blue);
         }
         
-        footer {
+        .step-number {
+            display: inline-block;
+            background-color: var(--samp-blue);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
             text-align: center;
-            padding: 30px;
-            color: #8f9ba8;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            margin-top: 40px;
+            line-height: 30px;
+            margin-right: 10px;
+            font-weight: bold;
         }
         
+        /* Lightbox Modal */
+        .lightbox-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.9);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .lightbox-content {
+            max-width: 90%;
+            max-height: 90%;
+            border-radius: 8px;
+            box-shadow: 0 0 30px rgba(76, 175, 80, 0.3);
+        }
+        
+        .close-lightbox {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            color: white;
+            font-size: 40px;
+            cursor: pointer;
+            z-index: 2001;
+        }
+        
+        /* Items Grid */
+        .items-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .item-card {
+            background-color: var(--samp-dark);
+            padding: 15px;
+            border-radius: 6px;
+            text-align: center;
+            border: 1px solid var(--samp-border);
+        }
+        
+        .item-name {
+            color: var(--samp-yellow);
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .item-quantity {
+            color: var(--samp-green);
+            font-size: 0.9rem;
+        }
+        
+        /* Warning Box */
+        .warning-box {
+            background-color: rgba(244, 67, 54, 0.1);
+            border: 1px solid var(--samp-red);
+            border-radius: 6px;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        
+        .warning-title {
+            color: var(--samp-red);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        
+        /* Responsive Design */
         @media (max-width: 768px) {
-            .container { border-radius: 10px; margin: 10px; }
-            nav { flex-direction: column; }
-            .nav-btn { padding: 15px; }
-            .content { padding: 20px; }
-            h1 { font-size: 2.2rem; }
+            .header-container {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+            
+            nav ul {
+                justify-content: center;
+            }
+            
+            .container {
+                padding: 0 10px;
+            }
+            
+            .section {
+                padding: 1.5rem;
+            }
+            
+            .image-gallery {
+                grid-template-columns: 1fr;
+            }
+            
+            .items-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            h1 {
+                font-size: 1.5rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .items-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            nav ul {
+                gap: 10px;
+            }
+            
+            nav a {
+                padding: 6px 12px;
+                font-size: 0.9rem;
+            }
+        }
+        
+        /* Footer */
+        footer {
+            background-color: var(--samp-dark);
+            padding: 2rem;
+            text-align: center;
+            border-top: 2px solid var(--samp-green);
+            margin-top: 3rem;
+        }
+        
+        .footer-text {
+            color: #888;
+            font-size: 0.9rem;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>🎵 TWS Music Streamer</h1>
-            <p class="subtitle">Azure Blob Storage • SA:MP Music Streaming</p>
-        </header>
-        
-        <nav>
-            <button class="nav-btn active" onclick="showTab('home')">🏠 Home</button>
-            <button class="nav-btn" onclick="showTab('songs')">📀 Songs</button>
-            <button class="nav-btn" onclick="showTab('upload')">📤 Upload</button>
-            <button class="nav-btn" onclick="showTab('help')">❓ Help</button>
-        </nav>
-        
-        <div class="content">
-            <!-- HOME TAB -->
-            <div id="home" class="tab active">
-                <div class="card">
-                    <h2>Azure Blob Storage Music</h2>
-                    <p>This website uses Azure Blob Storage for permanent MP3 streaming in SA:MP.</p>
-                    
-                    <div class="instructions">
-                        <h3>How to Use:</h3>
-                        <ol style="margin-left: 20px; line-height: 1.8;">
-                            <li>Go to <strong>Songs</strong> tab to browse music</li>
-                            <li>Click <strong>"Copy URL"</strong> on any song</li>
-                            <li>In SA:MP, type: <code>/stream [URL]</code></li>
-                            <li>Music plays instantly in-game!</li>
-                        </ol>
-                    </div>
-                    
-                    <div style="margin-top: 30px; display: flex; gap: 15px;">
-                        <button class="btn" onclick="showTab('songs')">Browse Songs</button>
-                        <button class="btn btn-secondary" onclick="showTab('upload')">Upload Music</button>
-                    </div>
-                </div>
-                
-                <div class="card">
-                    <h3>Quick Stats</h3>
-                    <div id="stats" style="color: #8f9ba8; padding: 20px; text-align: center;">
-                        <p>Connected to Azure Blob Storage</p>
-                        <p>URL format: <code>https://twsrpmusic.blob.core.windows.net/roleplay-music/[song-name]</code></p>
-                    </div>
-                </div>
+    <!-- Header -->
+    <header>
+        <div class="header-container">
+            <div class="logo">
+                <div class="logo-icon">🎮</div>
+                <h1>TWS SA:MP SERVER GUIDE</h1>
             </div>
-            
-            <!-- SONGS TAB -->
-            <div id="songs" class="tab">
-                <div class="card">
-                    <h2>Music Library</h2>
-                    <p>Songs stored in Azure Blob Storage container: <code>roleplay-music</code></p>
-                    
-                    <div style="margin: 20px 0;">
-                        <input type="text" id="searchBox" placeholder="🔍 Search songs..." 
-                               oninput="searchSongs()"
-                               style="width: 100%; padding: 12px; border-radius: 5px; border: 1px solid #00adb5; background: rgba(0,0,0,0.3); color: white; font-size: 1rem;">
-                    </div>
-                    
-                    <div id="songList" class="song-list">
-                        <div style="text-align: center; padding: 40px; color: #8f9ba8;">
-                            Loading songs from Azure Blob Storage...
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- UPLOAD TAB -->
-            <div id="upload" class="tab">
-                <div class="card">
-                    <h2>Upload to Azure Blob</h2>
-                    
-                    <div class="form-group">
-                        <label for="songName">Song Name (for URL):</label>
-                        <input type="text" id="songName" placeholder="Example: Binosko-Theme-A" maxlength="50">
-                        <small style="color: #8f9ba8; display: block; margin-top: 5px;">No spaces, use dashes. This becomes: https://twsrpmusic.blob.core.windows.net/roleplay-music/[this-name]</small>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="mp3File">MP3 File:</label>
-                        <input type="file" id="mp3File" accept=".mp3">
-                        <small style="color: #8f9ba8; display: block; margin-top: 5px;">Max 100MB per file</small>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="uploadPassword">Upload Password:</label>
-                        <input type="password" id="uploadPassword" placeholder="Enter upload password">
-                    </div>
-                    
-                    <button class="btn" onclick="uploadToAzure()" style="width: 100%; padding: 15px; font-size: 1.1rem;">
-                        📤 Upload to Azure Blob Storage
-                    </button>
-                    
-                    <div id="uploadStatus" style="margin-top: 20px; padding: 15px; border-radius: 5px; display: none;"></div>
-                    
-                    <div class="instructions" style="margin-top: 30px;">
-                        <h3>Upload Requirements:</h3>
-                        <ul style="margin-left: 20px; line-height: 1.8;">
-                            <li>Upload password required (contact admin)</li>
-                            <li>Files go to: <code>roleplay-music</code> container</li>
-                            <li>Direct URLs work with SA:MP immediately</li>
-                            <li>Files are permanent and won't be deleted</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- HELP TAB -->
-            <div id="help" class="tab">
-                <div class="card">
-                    <h2>SA:MP Streaming Guide</h2>
-                    
-                    <div class="instructions">
-                        <h3>Azure Blob URLs:</h3>
-                        <p>All songs use this format:</p>
-                        <div class="song-url">
-                            https://twsrpmusic.blob.core.windows.net/roleplay-music/[song-name]
-                        </div>
-                        <p style="margin-top: 10px;">Example:</p>
-                        <div class="song-url">
-                            https://twsrpmusic.blob.core.windows.net/roleplay-music/Binosko-Theme-A
-                        </div>
-                    </div>
-                    
-                    <div style="margin: 30px 0;">
-                        <h3>SA:MP Command:</h3>
-                        <div style="background: rgba(0,0,0,0.3); padding: 15px; border-radius: 5px; font-family: monospace;">
-                            /stream https://twsrpmusic.blob.core.windows.net/roleplay-music/Binosko-Theme-A
-                        </div>
-                        <button class="btn" onclick="copyExample()" style="margin-top: 15px;">
-                            Copy Example Command
-                        </button>
-                    </div>
-                </div>
-            </div>
+            <nav>
+                <ul>
+                    <li><a href="#mining">⛏️ Mining</a></li>
+                    <li><a href="#woodcutting">🪓 Woodcutting</a></li>
+                    <li><a href="#warehouses">🏭 Warehouses</a></li>
+                    <li><a href="#sidequests">📋 Side Quests</a></li>
+                </ul>
+            </nav>
         </div>
-        
-        <footer>
-            <p>TWS Music Streamer • Azure Blob Storage • Permanent SA:MP Streaming URLs</p>
-            <p style="margin-top: 10px; font-size: 0.9rem; color: #666;">
-                Container: roleplay-music • Use: <code>/stream [blob-url]</code>
-            </p>
-        </footer>
-    </div>
+    </header>
 
-    <!-- Success Modal -->
-    <div id="successModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; align-items: center; justify-content: center;">
-        <div style="background: #1a1a2e; padding: 40px; border-radius: 10px; max-width: 600px; width: 90%; text-align: center;">
-            <div style="font-size: 3rem; margin-bottom: 20px;">✅</div>
-            <h2>Upload Successful!</h2>
-            <div id="successUrl" class="song-url" style="margin: 20px 0;"></div>
-            <p>Use this URL in SA:MP with <code>/stream [URL]</code></p>
-            <div style="margin-top: 30px; display: flex; gap: 15px; justify-content: center;">
-                <button class="btn" onclick="copySuccessUrl()">Copy URL</button>
-                <button class="btn btn-secondary" onclick="closeModal()">Close</button>
+    <!-- Main Container -->
+    <div class="container">
+        <!-- MINING SYSTEM SECTION -->
+        <section id="mining" class="section">
+            <h2 class="section-title">
+                <span class="section-icon">⛏️</span>
+                MINING SYSTEM
+            </h2>
+            
+            <p>Have you ever thought about doing extra work to get a couple resources for something useful? Grab a <span class="command">/shovel</span> and dive into the mines!</p>
+            
+            <div class="command-box">
+                <div class="command">/inv</div>
+                <div class="command-desc">Open your Inventory to check your items and mining progress</div>
             </div>
-        </div>
+            
+            <p>Every progress you made during any work gives you <strong>+1 exp</strong>. Check out <span class="command">/i</span> or <span class="command">/profile</span> to view your profile and status.</p>
+            
+            <div class="warning-box">
+                <div class="warning-title">⚠️ IMPORTANT</div>
+                <p>You cannot use <span class="command">/tprequest</span> near any mining areas for security reasons.</p>
+            </div>
+            
+            <!-- Metal Ore Mine -->
+            <h3 style="color: var(--samp-blue); margin: 25px 0 15px 0; border-bottom: 1px solid var(--samp-blue); padding-bottom: 8px;">
+                Metal Ore Mine - Hunter Quarry
+            </h3>
+            
+            <div class="image-gallery">
+                <div class="image-container">
+                    <img src="https://i.ibb.co/RksMwGkM/Location-1.png" alt="Hunter Quarry Map Location" class="guide-image" onclick="openLightbox(this.src, 'Hunter Quarry Map Location')">
+                    <div class="image-caption">Hunter Quarry Location on Map</div>
+                </div>
+                <div class="image-container">
+                    <img src="https://i.ibb.co/27x3BGgL/Location-2.png" alt="Hunter Quarry Preview" class="guide-image" onclick="openLightbox(this.src, 'Hunter Quarry Preview')">
+                    <div class="image-caption">Hunter Quarry Area Preview</div>
+                </div>
+            </div>
+            
+            <h4 style="color: var(--samp-yellow); margin: 20px 0 10px 0;">Items from Metal Ore Mines:</h4>
+            <div class="items-grid">
+                <div class="item-card">
+                    <div class="item-name">Large Metal Ore</div>
+                    <div class="item-quantity">2 pieces per successful mining</div>
+                </div>
+                <div class="item-card">
+                    <div class="item-name">Small Metal Ore</div>
+                    <div class="item-quantity">1 piece per successful mining</div>
+                </div>
+                <div class="item-card">
+                    <div class="item-name">Diamond</div>
+                    <div class="item-quantity">Rare drop - High value</div>
+                </div>
+            </div>
+            
+            <p style="margin-top: 20px;">It is random to get Large and Small pieces of metal ores. Diamond is rare to get. There are <strong>6 spots</strong> that you can mine, marked with green dots:</p>
+            
+            <div class="image-container" style="margin: 20px 0;">
+                <img src="https://i.ibb.co/PzQv1r1h/Screenshot-2025-12-08-at-01-43-08-Mining-Refinery-pdf.png" alt="Mining Spots" class="guide-image" onclick="openLightbox(this.src, 'Mining Spots Marked with Green Dots')">
+                <div class="image-caption">6 Mining Spots Marked with Green Indicators</div>
+            </div>
+            
+            <!-- Metal Refinery -->
+            <h3 style="color: var(--samp-blue); margin: 40px 0 15px 0; border-bottom: 1px solid var(--samp-blue); padding-bottom: 8px;">
+                Metal Refinery - Angel Pine Junkyard
+            </h3>
+            
+            <div class="image-gallery">
+                <div class="image-container">
+                    <img src="https://i.ibb.co/YBrFzCK1/image.png" alt="Angel Pine Map Location" class="guide-image" onclick="openLightbox(this.src, 'Angel Pine Junkyard Location')">
+                    <div class="image-caption">Angel Pine Junkyard Map Location</div>
+                </div>
+                <div class="image-container">
+                    <img src="https://i.ibb.co/TM4sYJ85/2.png" alt="Angel Pine Preview" class="guide-image" onclick="openLightbox(this.src, 'Angel Pine Junkyard Preview')">
+                    <div class="image-caption">Angel Pine Junkyard Area</div>
+                </div>
+            </div>
+            
+            <h4 style="color: var(--samp-yellow); margin: 20px 0 10px 0;">Refinery Steps:</h4>
+            
+            <div class="step">
+                <div class="step-number">1</div>
+                <span>Use the Metal ores to refine them into Metals. Requires <strong>5 metal ore = 1 Metal</strong>.</span>
+                <div class="command-box" style="margin: 10px 0;">
+                    <div class="command">/processor</div>
+                    <div class="command-desc">Load ores into the refinery machine</div>
+                </div>
+                <div class="image-container" style="margin: 15px 0;">
+                    <img src="https://i.ibb.co/39vb9v29/1.png" alt="Step 1 - Load Ores" class="guide-image" onclick="openLightbox(this.src, 'Step 1: Load Ores with /processor')">
+                    <div class="image-caption">Step 1: Load ores into the processor</div>
+                </div>
+                <p>After using <span class="command">/processor</span>, head upstairs to the machine.</p>
+            </div>
+            
+            <div class="step">
+                <div class="step-number">2</div>
+                <span>Press <strong>LMB (Punch)</strong> to start the refining machine.</span>
+                <div class="image-container" style="margin: 15px 0;">
+                    <img src="https://i.ibb.co/rfq3Mbwk/2.png" alt="Step 2 - Start Machine" class="guide-image" onclick="openLightbox(this.src, 'Step 2: Punch to Start Machine')">
+                    <div class="image-caption">Step 2: Punch the machine to start refining</div>
+                </div>
+            </div>
+            
+            <div class="step">
+                <div class="step-number">3</div>
+                <span>Head downstairs and pick up the refined Metal.</span>
+                <div class="image-container" style="margin: 15px 0;">
+                    <img src="https://i.ibb.co/5xFDvxpR/3.png" alt="Step 3 - Collect Metal" class="guide-image" onclick="openLightbox(this.src, 'Step 3: Collect Refined Metal')">
+                    <div class="image-caption">Step 3: Collect your refined metal</div>
+                </div>
+                <p><strong>Conversion:</strong> 5 metal ore → 1 refined metal</p>
+            </div>
+            
+            <!-- Chemical Mine -->
+            <h3 style="color: var(--samp-red); margin: 40px 0 15px 0; border-bottom: 1px solid var(--samp-red); padding-bottom: 8px;">
+                Chemical Mine - Tierra Robada
+            </h3>
+            
+            <div class="image-gallery">
+                <div class="image-container">
+                    <img src="https://i.ibb.co/tTPpdKG7/1.png" alt="Chemical Mine Map" class="guide-image" onclick="openLightbox(this.src, 'Chemical Mine Map Location')">
+                    <div class="image-caption">Chemical Mine Map Location</div>
+                </div>
+                <div class="image-container">
+                    <img src="https://i.ibb.co/NdFrGvqZ/2.png" alt="Chemical Mine Preview" class="guide-image" onclick="openLightbox(this.src, 'Chemical Mine Area')">
+                    <div class="image-caption">Chemical Mine External View</div>
+                </div>
+            </div>
+            
+            <div class="warning-box">
+                <div class="warning-title">☣️ CHEMICAL HAZARDS</div>
+                <p>The chance of taking damage is random by getting poisoned while mining and getting exploded. Use caution!</p>
+            </div>
+            
+            <h4 style="color: var(--samp-yellow); margin: 20px 0 10px 0;">Items from Chemical Mines:</h4>
+            <div class="item-card" style="max-width: 200px;">
+                <div class="item-name">Chemical</div>
+                <div class="item-quantity">1 per successful extraction</div>
+            </div>
+            
+            <h4 style="color: var(--samp-yellow); margin: 20px 0 10px 0;">Explosive Crafting:</h4>
+            <div class="command-box">
+                <div class="command">/makebomb</div>
+                <div class="command-desc">Craft explosives using chemical materials</div>
+            </div>
+            <div class="command-box">
+                <div class="command">/plantbomb</div>
+                <div class="command-desc">Deploy crafted explosives (Use C + Enter to plant)</div>
+            </div>
+            
+            <div class="image-container" style="margin: 20px 0;">
+                <img src="https://i.ibb.co/dwZRB2Zv/3.png" alt="Chemical Mine Interior" class="guide-image" onclick="openLightbox(this.src, 'Chemical Mine Interior')">
+                <div class="image-caption">Inside the Chemical Mine</div>
+            </div>
+        </section>
+        
+        <!-- WOODCUTTING SECTION -->
+        <section id="woodcutting" class="section">
+            <h2 class="section-title">
+                <span class="section-icon">🪓</span>
+                WOODCUTTING SYSTEM
+            </h2>
+            
+            <p>Woodcutting is essential for construction, crafting, and fuel. Use <span class="command">/cuttree</span> near marked trees.</p>
+            
+            <h3 style="color: var(--samp-green); margin: 25px 0 15px 0;">Tree Types:</h3>
+            
+            <div class="image-gallery">
+                <div class="image-container">
+                    <img src="https://i.ibb.co/v6pLSGm8/small-tree.png" alt="Small Tree" class="guide-image" onclick="openLightbox(this.src, 'Small Tree - White Branch Variety')">
+                    <div class="image-caption">Small Trees - White branch variety (Direct to inventory)</div>
+                </div>
+                <div class="image-container">
+                    <img src="https://i.ibb.co/KpFNGCf8/big-reee.png" alt="Big Tree" class="guide-image" onclick="openLightbox(this.src, 'Big Tree - Requires DFT Transport')">
+                    <div class="image-caption">Big Trees - Requires DFT truck transport</div>
+                </div>
+            </div>
+            
+            <div class="step">
+                <div class="step-number">📦</div>
+                <span>After cutting big trees, wood stacks in hands. Press <strong>N</strong> to load wood onto nearby DFT trucks.</span>
+            </div>
+            
+            <h3 style="color: var(--samp-green); margin: 25px 0 15px 0;">Transportation & Storage:</h3>
+            <p><strong>DFT Truck Locations:</strong> Lumber Camp, Fort Carson, Faction Bases</p>
+            
+            <p><strong>Warehouse Storage:</strong> Drive loaded trucks to warehouses. Park and press <strong>N</strong> to store wood.</p>
+        </section>
+        
+        <!-- WAREHOUSES SECTION -->
+        <section id="warehouses" class="section">
+            <h2 class="section-title">
+                <span class="section-icon">🏭</span>
+                WAREHOUSE SYSTEM
+            </h2>
+            
+            <p>Wood storage depends on your faction and faction tier clearance level.</p>
+            
+            <div class="image-gallery">
+                <div class="image-container">
+                    <img src="https://i.ibb.co/p6FfQqDm/Blue-warehouse.png" alt="Blue Warehouse" class="guide-image" onclick="openLightbox(this.src, 'Blue Warehouse - Clearance 0')">
+                    <div class="image-caption">Blue Warehouse - Clearance level 0</div>
+                </div>
+                <div class="image-container">
+                    <img src="https://i.ibb.co/6JttF4fh/RED-WAREHOUSE.png" alt="Red Warehouse" class="guide-image" onclick="openLightbox(this.src, 'Red Warehouse - Clearance 1')">
+                    <div class="image-caption">Red Warehouse - Clearance level 1</div>
+                </div>
+            </div>
+            
+            <div class="command-box">
+                <div class="command">/warehouse storage</div>
+                <div class="command-desc">View contents and withdraw items</div>
+            </div>
+            
+            <div class="command-box">
+                <div class="command">/warehouse store</div>
+                <div class="command-desc">Store items in warehouse</div>
+            </div>
+            
+            <div class="warning-box">
+                <div class="warning-title">⚠️ ACCESS REQUIREMENTS</div>
+                <p>Each warehouse displays its required clearance level. You must meet or exceed this requirement to access.</p>
+            </div>
+        </section>
+        
+        <!-- SIDE QUESTS SECTION -->
+        <section id="sidequests" class="section">
+            <h2 class="section-title">
+                <span class="section-icon">📋</span>
+                SIDE QUEST SYSTEM
+            </h2>
+            
+            <p>Side quests are secondary tasks given by NPCs (Actors) found on islands outside San Andreas. Each task offers unique rewards including items, money, and furniture materials.</p>
+            
+            <div class="image-container" style="margin: 20px 0;">
+                <img src="https://i.ibb.co/6cz960Qj/sidequest.png" alt="Side Quest Example" class="guide-image" onclick="openLightbox(this.src, 'Side Quest NPC Example')">
+                <div class="image-caption">Side Quest NPC Actor Example</div>
+            </div>
+            
+            <h3 style="color: var(--samp-yellow); margin: 25px 0 15px 0;">Quest Commands:</h3>
+            
+            <div class="command-box">
+                <div class="command">/takesidequest</div>
+                <div class="command-desc">Take a side quest from an actor (ONE active quest at a time)</div>
+            </div>
+            
+            <div class="command-box">
+                <div class="command">/cancelsidequest</div>
+                <div class="command-desc">Cancel your current side quest</div>
+            </div>
+            
+            <div class="command-box">
+                <div class="command">/completesidequest</div>
+                <div class="command-desc">Complete current side quest when requirements met</div>
+            </div>
+            
+            <div class="warning-box">
+                <div class="warning-title">⚠️ QUEST LIMITATION</div>
+                <p>You can only have <strong>ONE</strong> active side quest at a time. Some quest items are needed for other questlines - plan carefully!</p>
+            </div>
+            
+            <h3 style="color: var(--samp-green); margin: 25px 0 15px 0;">Reward Types:</h3>
+            <ul style="padding-left: 20px; margin: 15px 0;">
+                <li>💰 Currency for war efforts</li>
+                <li>🎁 Unique materials for other quests</li>
+                <li>🛋️ Furniture crafting components</li>
+                <li>🔑 Quest chain prerequisites</li>
+            </ul>
+        </section>
     </div>
+    
+    <!-- Lightbox Modal -->
+    <div id="lightboxModal" class="lightbox-modal">
+        <span class="close-lightbox" onclick="closeLightbox()">&times;</span>
+        <img id="lightboxImage" class="lightbox-content" alt="Enlarged view">
+        <div id="lightboxCaption" style="color: white; text-align: center; margin-top: 10px; font-size: 1.2rem;"></div>
+    </div>
+    
+    <!-- Footer -->
+    <footer>
+        <div class="footer-text">
+            <p>🎮 TWS SA:MP Server Guide v1.0 | Images hosted on ImageBB</p>
+            <p style="margin-top: 10px; font-size: 0.8rem; color: #666;">Click on any image to view full size | Mobile Responsive Design</p>
+        </div>
+    </footer>
 
     <script>
-        // ==================== AZURE BLOB STORAGE WEBSITE ====================
-        
-        // Configuration
-        const AZURE_BASE_URL = 'https://twsrpmusic.blob.core.windows.net';
-        const CONTAINER_NAME = 'roleplay-music';
-        const UPLOAD_PASSWORD = 'ridingisFun123!'; // Change this!
-        
-        // Tab switching
-        function showTab(tabName) {
-            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
-            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+        // Lightbox functionality
+        function openLightbox(src, caption) {
+            const modal = document.getElementById('lightboxModal');
+            const img = document.getElementById('lightboxImage');
+            const cap = document.getElementById('lightboxCaption');
             
-            document.getElementById(tabName).classList.add('active');
-            document.querySelectorAll('.nav-btn').forEach(btn => {
-                if (btn.getAttribute('onclick')?.includes(tabName)) {
-                    btn.classList.add('active');
+            img.src = src;
+            cap.textContent = caption;
+            modal.style.display = 'flex';
+            
+            // Prevent scrolling when lightbox is open
+            document.body.style.overflow = 'hidden';
+        }
+        
+        function closeLightbox() {
+            const modal = document.getElementById('lightboxModal');
+            modal.style.display = 'none';
+            
+            // Restore scrolling
+            document.body.style.overflow = 'auto';
+        }
+        
+        // Close lightbox when clicking outside image
+        document.getElementById('lightboxModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeLightbox();
+            }
+        });
+        
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('nav a').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                const targetSection = document.querySelector(targetId);
+                
+                if (targetSection) {
+                    window.scrollTo({
+                        top: targetSection.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+        
+        // Mobile menu toggle (if needed later)
+        let isMobileMenuOpen = false;
+        
+        // Add active class to current section in view
+        window.addEventListener('scroll', function() {
+            const sections = document.querySelectorAll('.section');
+            const navLinks = document.querySelectorAll('nav a');
+            
+            let currentSection = '';
+            
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop - 100;
+                const sectionHeight = section.clientHeight;
+                
+                if (scrollY >= sectionTop && scrollY < sectionTop + sectionHeight) {
+                    currentSection = section.getAttribute('id');
                 }
             });
             
-            if (tabName === 'songs') loadSongs();
-        }
-        
-        // Load songs - SIMPLE: We'll show a manual list since we can't list blobs from browser
-        function loadSongs() {
-            const songList = document.getElementById('songList');
-            
-            // For now, show example songs
-            // In a real setup, you'd need a backend to list blobs
-            const exampleSongs = [
-                'Binosko-Theme-A',
-                'Example-Song-1',
-                'Test-Music'
-            ];
-            
-            let html = '';
-            exampleSongs.forEach(song => {
-                const url = `${AZURE_BASE_URL}/${CONTAINER_NAME}/${song}`;
-                html += `
-                    <div class="song-item">
-                        <div class="song-name">${song}</div>
-                        <div class="song-url">${url}</div>
-                        <button class="btn" onclick="copyUrl('${url}')">Copy URL</button>
-                        <button class="btn btn-secondary" onclick="playPreview('${url}')" style="margin-left: 10px;">
-                            Test Play
-                        </button>
-                    </div>
-                `;
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + currentSection) {
+                    link.classList.add('active');
+                }
             });
-            
-            songList.innerHTML = html || `
-                <div style="text-align: center; padding: 40px; color: #8f9ba8;">
-                    <h3>No songs listed</h3>
-                    <p>Upload songs using the Upload tab</p>
-                    <p>Note: Browser can't list Azure blobs directly</p>
-                </div>
-            `;
-            
-            setupSearch();
-        }
-        
-        // Search function
-        function searchSongs() {
-            const searchTerm = document.getElementById('searchBox').value.toLowerCase();
-            document.querySelectorAll('.song-item').forEach(item => {
-                item.style.display = item.textContent.toLowerCase().includes(searchTerm) ? 'block' : 'none';
-            });
-        }
-        
-        function setupSearch() {
-            document.getElementById('searchBox')?.addEventListener('input', searchSongs);
-        }
-        
-        // Upload to Azure (SIMULATED - needs backend for real upload)
-        async function uploadToAzure() {
-            const songName = document.getElementById('songName').value.trim();
-            const fileInput = document.getElementById('mp3File');
-            const password = document.getElementById('uploadPassword').value;
-            
-            // Validation
-            if (!songName) return showStatus('Please enter a song name', 'error');
-            if (!fileInput.files[0]) return showStatus('Please select an MP3 file', 'error');
-            if (password !== UPLOAD_PASSWORD) return showStatus('Incorrect upload password', 'error');
-            
-            const file = fileInput.files[0];
-            if (file.size > 100 * 1024 * 1024) return showStatus('File too large (max 100MB)', 'error');
-            if (!file.name.endsWith('.mp3')) return showStatus('Only MP3 files allowed', 'error');
-            
-            showStatus('⚠️ Upload simulation - Needs backend setup', 'info');
-            
-            // Simulate upload
-            setTimeout(() => {
-                const url = `${AZURE_BASE_URL}/${CONTAINER_NAME}/${songName}`;
-                showSuccessModal(url);
-                showStatus('✅ Upload simulated successfully', 'success');
-                
-                // Clear form
-                document.getElementById('songName').value = '';
-                document.getElementById('mp3File').value = '';
-                document.getElementById('uploadPassword').value = '';
-            }, 1500);
-        }
-        
-        // Status messages
-        function showStatus(message, type = 'info') {
-            const statusEl = document.getElementById('uploadStatus');
-            statusEl.innerHTML = message;
-            statusEl.style.display = 'block';
-            statusEl.style.background = type === 'error' ? 'rgba(255,0,0,0.1)' : 
-                                        type === 'success' ? 'rgba(0,255,0,0.1)' : 'rgba(0,173,181,0.1)';
-            statusEl.style.borderLeft = type === 'error' ? '4px solid #ff5555' : 
-                                        type === 'success' ? '4px solid #55ff55' : '4px solid #00adb5';
-            statusEl.style.color = type === 'error' ? '#ff5555' : 
-                                   type === 'success' ? '#55ff55' : '#00adb5';
-            
-            if (type !== 'error') {
-                setTimeout(() => statusEl.style.display = 'none', 5000);
-            }
-        }
-        
-        // Modal functions
-        function showSuccessModal(url) {
-            document.getElementById('successUrl').textContent = url;
-            document.getElementById('successModal').style.display = 'flex';
-        }
-        
-        function closeModal() {
-            document.getElementById('successModal').style.display = 'none';
-        }
-        
-        function copySuccessUrl() {
-            copyUrl(document.getElementById('successUrl').textContent);
-        }
-        
-        // Copy URL
-        function copyUrl(url) {
-            navigator.clipboard.writeText(url).then(() => {
-                alert(`✅ URL copied!\n\nUse in SA:MP:\n/stream ${url}`);
-            }).catch(() => {
-                const textarea = document.createElement('textarea');
-                textarea.value = url;
-                document.body.appendChild(textarea);
-                textarea.select();
-                document.execCommand('copy');
-                document.body.removeChild(textarea);
-                alert(`URL copied!\n\nUse in SA:MP:\n/stream ${url}`);
-            });
-        }
-        
-        // Play preview
-        function playPreview(url) {
-            const audio = new Audio(url);
-            audio.volume = 0.5;
-            audio.play().catch(e => {
-                alert('Could not play preview. URL might work in SA:MP.');
-            });
-        }
-        
-        // Copy example
-        function copyExample() {
-            const example = '/stream https://twsrpmusic.blob.core.windows.net/roleplay-music/Binosko-Theme-A';
-            copyUrl(example);
-        }
-        
-        // Initialize
-        document.addEventListener('DOMContentLoaded', function() {
-            loadSongs();
         });
-        
-        // Global functions
-        window.showTab = showTab;
-        window.copyUrl = copyUrl;
-        window.playPreview = playPreview;
-        window.copyExample = copyExample;
-        window.uploadToAzure = uploadToAzure;
-        
     </script>
 </body>
 </html>
