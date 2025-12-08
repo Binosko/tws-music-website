@@ -2,6 +2,6 @@
   "name": "tws-music-website",
   "version": "1.0.0",
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.490.0"
+    // No dependencies needed for GitHub upload!
   }
 }
