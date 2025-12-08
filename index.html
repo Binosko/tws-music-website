@@ -18,18 +18,10 @@
         </header>
 
         <nav class="tabs">
-            <button class="tab-btn active" onclick="showTab('home')">
-                <span>🏠</span> Home
-            </button>
-            <button class="tab-btn" onclick="showTab('upload')">
-                <span>📤</span> Upload
-            </button>
-            <button class="tab-btn" onclick="showTab('library')">
-                <span>📚</span> Library
-            </button>
-            <button class="tab-btn" onclick="showTab('settings')">
-                <span>⚙️</span> Settings
-            </button>
+            <button class="tab-btn active" onclick="showTab('home')">🏠 Home</button>
+            <button class="tab-btn" onclick="showTab('upload')">📤 Upload</button>
+            <button class="tab-btn" onclick="showTab('library')">📚 Library</button>
+            <button class="tab-btn" onclick="showTab('settings')">⚙️ Settings</button>
         </nav>
 
         <main>
@@ -37,7 +29,7 @@
             <section id="home" class="tab-content active">
                 <div class="card">
                     <h2>Welcome to SA:MP Music Streaming!</h2>
-                    <p>This website allows you to upload MP3 files and get permanent streaming links for GTA San Andreas Multiplayer.</p>
+                    <p>Upload MP3 files and get permanent streaming links for GTA San Andreas Multiplayer.</p>
                     
                     <div class="features">
                         <div class="feature">
@@ -48,32 +40,31 @@
                         <div class="feature">
                             <div class="feature-icon">🔗</div>
                             <h3>Permanent Links</h3>
-                            <p>Get URLs that never expire for SA:MP streaming</p>
+                            <p>Get URLs that work forever in SA:MP</p>
                         </div>
                         <div class="feature">
                             <div class="feature-icon">👤</div>
                             <h3>Display Names</h3>
-                            <p>Set your display name to appear as uploader</p>
+                            <p>Set your display name as uploader</p>
                         </div>
                     </div>
 
                     <div class="instructions">
                         <h3>How to Use:</h3>
                         <ol>
-                            <li><strong>Set Display Name:</strong> Go to Settings tab first</li>
-                            <li><strong>Upload MP3:</strong> Go to Upload tab, fill details</li>
-                            <li><strong>Copy URL:</strong> Go to Library tab, find your song</li>
-                            <li><strong>Use in SA:MP:</strong> Type <code>/stream [URL]</code> in-game</li>
+                            <li><strong>Set Display Name:</strong> Go to Settings tab</li>
+                            <li><strong>Upload MP3:</strong> Go to Upload tab</li>
+                            <li><strong>Copy URL:</strong> Go to Library tab</li>
+                            <li><strong>Use in SA:MP:</strong> Use the copied URL</li>
                         </ol>
                     </div>
 
                     <div class="info-box">
-                        <strong>📝 Important:</strong>
+                        <strong>📝 Note:</strong>
                         <ul>
-                            <li>Upload password: <code>ridingisFun123!</code></li>
+                            <li>Upload password required</li>
                             <li>Max file size: 100MB per song</li>
                             <li>Only upload music you have rights to</li>
-                            <li>Files are stored permanently</li>
                         </ul>
                     </div>
                 </div>
@@ -103,8 +94,7 @@
                         
                         <div class="form-group">
                             <label for="uploadPassword">Upload Password *</label>
-                            <input type="password" id="uploadPassword" placeholder="Enter the upload password">
-                            <small>Password required to prevent spam uploads.</small>
+                            <input type="password" id="uploadPassword" placeholder="Enter upload password">
                         </div>
                         
                         <button id="uploadBtn" class="primary-btn" onclick="uploadSong()">
@@ -114,10 +104,6 @@
                     </div>
                     
                     <div id="uploadStatus" class="status-box"></div>
-                    
-                    <div class="upload-note">
-                        <p><strong>Note:</strong> For now, this saves songs locally. Internet Archive integration coming soon.</p>
-                    </div>
                 </div>
             </section>
 
@@ -125,11 +111,11 @@
             <section id="library" class="tab-content">
                 <div class="card">
                     <h2>📚 Music Library</h2>
-                    <p class="card-subtitle">Browse all uploaded songs and copy streaming URLs</p>
+                    <p class="card-subtitle">Browse all uploaded songs</p>
                     
                     <div class="library-controls">
                         <div class="search-container">
-                            <input type="text" id="searchInput" placeholder="Search by name or uploader..." oninput="searchSongs()">
+                            <input type="text" id="searchInput" placeholder="Search songs..." oninput="searchSongs()">
                             <div class="search-icon">🔍</div>
                         </div>
                         <div class="stats">
@@ -144,10 +130,6 @@
                             <p>Be the first to upload a song!</p>
                             <button class="secondary-btn" onclick="showTab('upload')">Upload First Song</button>
                         </div>
-                    </div>
-                    
-                    <div class="library-help">
-                        <p><strong>How to use in SA:MP:</strong> Copy the URL and use command <code>/stream [URL]</code></p>
                     </div>
                 </div>
             </section>
@@ -164,31 +146,16 @@
                             <small>This name will appear next to your uploaded songs.</small>
                         </div>
                         
-                        <div class="form-actions">
-                            <button class="primary-btn" onclick="saveSettings()">Save Settings</button>
-                            <button class="secondary-btn" onclick="clearLibrary()">Clear Local Library</button>
-                        </div>
+                        <button class="primary-btn" onclick="saveSettings()">Save Settings</button>
                         
                         <div id="settingsStatus" class="status-box"></div>
-                    </div>
-                    
-                    <div class="settings-info">
-                        <h3>About This Site</h3>
-                        <ul>
-                            <li><strong>Storage:</strong> Local browser storage (for now)</li>
-                            <li><strong>Hosting:</strong> Vercel (free)</li>
-                            <li><strong>Password:</strong> ridingisFun123!</li>
-                            <li><strong>File Limit:</strong> 100MB per song</li>
-                        </ul>
-                        <p class="version">Version 1.0 • Made for SA:MP Community</p>
                     </div>
                 </div>
             </section>
         </main>
 
         <footer>
-            <p>SA:MP Music Streamer • Use command <code>/stream [URL]</code> in SA:MP</p>
-            <p class="footer-note">Note: Songs are saved locally in your browser for now</p>
+            <p>SA:MP Music Streamer • Upload your MP3s for streaming</p>
         </footer>
     </div>
 
@@ -198,7 +165,6 @@
             <div class="modal-icon">✅</div>
             <h3>Upload Successful!</h3>
             <div class="url-display" id="successUrl"></div>
-            <p>Use this URL in SA:MP with <code>/stream [URL]</code></p>
             <div class="modal-actions">
                 <button class="primary-btn" onclick="copySuccessUrl()">Copy URL</button>
                 <button class="secondary-btn" onclick="closeModal()">Close</button>
