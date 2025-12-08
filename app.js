@@ -1,132 +1,73 @@
-// =============================================
-// SA:MP Music Streamer - Main Application
-// =============================================
-
-// Global variables
+// SA:MP Music Streamer
 let allSongs = [];
-const UPLOAD_PASSWORD = 'ridingisFun123!';
-const MAX_FILE_SIZE = 100 * 1024 * 1024; // 100MB
+const UPLOAD_PASSWORD = 'ridingisFun123!'; // You'll share this privately
 
-// =============================================
-// INITIALIZATION
-// =============================================
-
+// Initialize
 document.addEventListener('DOMContentLoaded', function() {
-    // Initialize the app
     loadDisplayName();
     loadSongsFromStorage();
     updateSongCount();
     updateUserInfo();
-    
-    // Set default tab to home
     showTab('home');
-    
-    // Add event listeners
-    document.getElementById('mp3File').addEventListener('change', showFileInfo);
-    document.getElementById('searchInput').addEventListener('input', searchSongs);
-    
-    console.log('SA:MP Music Streamer initialized');
 });
 
-// =============================================
-// TAB NAVIGATION
-// =============================================
-
+// Tab Navigation
 function showTab(tabName) {
-    // Hide all tabs
     document.querySelectorAll('.tab-content').forEach(tab => {
         tab.classList.remove('active');
     });
-    
-    // Remove active class from all tab buttons
     document.querySelectorAll('.tab-btn').forEach(btn => {
         btn.classList.remove('active');
     });
     
-    // Show selected tab
-    const selectedTab = document.getElementById(tabName);
-    if (selectedTab) {
-        selectedTab.classList.add('active');
-    }
-    
-    // Activate corresponding tab button
+    document.getElementById(tabName).classList.add('active');
     document.querySelectorAll('.tab-btn').forEach(btn => {
         if (btn.textContent.includes(getTabName(tabName))) {
             btn.classList.add('active');
         }
     });
     
-    // Special handling for library tab
-    if (tabName === 'library') {
-        renderSongList();
-    }
+    if (tabName === 'library') renderSongList();
 }
 
 function getTabName(tabId) {
-    const tabNames = {
-        'home': 'Home',
-        'upload': 'Upload',
-        'library': 'Library',
-        'settings': 'Settings'
-    };
-    return tabNames[tabId] || tabId;
+    return tabId.charAt(0).toUpperCase() + tabId.slice(1);
 }
 
-// =============================================
-// SETTINGS MANAGEMENT
-// =============================================
-
+// Settings
 function loadDisplayName() {
     const savedName = localStorage.getItem('samp_displayName');
-    if (savedName) {
-        document.getElementById('displayName').value = savedName;
-    }
+    if (savedName) document.getElementById('displayName').value = savedName;
 }
 
 function saveSettings() {
     const displayName = document.getElementById('displayName').value.trim() || 'Anonymous';
-    
-    // Save to localStorage
     localStorage.setItem('samp_displayName', displayName);
-    
-    // Update UI
     updateUserInfo();
     
-    // Show success message
     const statusEl = document.getElementById('settingsStatus');
     statusEl.textContent = `✅ Settings saved! You will appear as: ${displayName}`;
     statusEl.className = 'status-box';
     statusEl.style.display = 'block';
-    
-    // Hide message after 3 seconds
-    setTimeout(() => {
-        statusEl.style.display = 'none';
-    }, 3000);
+    setTimeout(() => { statusEl.style.display = 'none'; }, 3000);
 }
 
 function updateUserInfo() {
     const displayName = localStorage.getItem('samp_displayName') || 'Guest';
-    const userInfoEl = document.getElementById('userInfo');
-    if (userInfoEl) {
-        userInfoEl.textContent = `👤 ${displayName}`;
-    }
+    document.getElementById('userInfo').textContent = `👤 ${displayName}`;
 }
 
-// =============================================
-// FILE UPLOAD HANDLING
-// =============================================
-
+// File Upload
 function showFileInfo() {
     const fileInput = document.getElementById('mp3File');
     const fileInfoEl = document.getElementById('fileInfo');
     
     if (fileInput.files.length > 0) {
         const file = fileInput.files[0];
-        const fileSize = (file.size / 1024 / 1024).toFixed(2); // MB
+        const fileSize = (file.size / 1024 / 1024).toFixed(2);
         fileInfoEl.innerHTML = `
             <strong>Selected file:</strong> ${file.name}<br>
-            <strong>Size:</strong> ${fileSize} MB<br>
-            <strong>Type:</strong> ${file.type || 'MP3 audio'}
+            <strong>Size:</strong> ${fileSize} MB
         `;
     } else {
         fileInfoEl.innerHTML = 'No file selected';
@@ -134,77 +75,52 @@ function showFileInfo() {
 }
 
 async function uploadSong() {
-    // Get form values
     const shortName = document.getElementById('shortName').value.trim();
     const fileInput = document.getElementById('mp3File');
     const password = document.getElementById('uploadPassword').value;
     const displayName = localStorage.getItem('samp_displayName') || 'Anonymous';
     
     // Validation
-    if (!shortName) {
-        showUploadStatus('❌ Please enter a short name for the song', 'error');
-        return;
-    }
-    
-    if (!fileInput.files[0]) {
-        showUploadStatus('❌ Please select an MP3 file', 'error');
-        return;
-    }
-    
-    if (password !== UPLOAD_PASSWORD) {
-        showUploadStatus('❌ Incorrect upload password', 'error');
-        return;
-    }
+    if (!shortName) return showUploadStatus('❌ Please enter a short name', 'error');
+    if (!fileInput.files[0]) return showUploadStatus('❌ Please select an MP3 file', 'error');
+    if (password !== UPLOAD_PASSWORD) return showUploadStatus('❌ Incorrect upload password', 'error');
     
     const file = fileInput.files[0];
-    
-    // Validate file type
+    if (file.size > 100 * 1024 * 1024) return showUploadStatus('❌ File too large (max 100MB)', 'error');
     if (!file.type.includes('audio/mpeg') && !file.name.toLowerCase().endsWith('.mp3')) {
-        showUploadStatus('❌ Only MP3 files are allowed', 'error');
-        return;
+        return showUploadStatus('❌ Only MP3 files allowed', 'error');
     }
     
-    // Validate file size
-    if (file.size > MAX_FILE_SIZE) {
-        showUploadStatus(`❌ File too large. Max size: 100MB (Your file: ${(file.size/1024/1024).toFixed(2)}MB)`, 'error');
-        return;
-    }
-    
-    // Disable upload button and show spinner
+    // Show loading
     const uploadBtn = document.getElementById('uploadBtn');
     const uploadText = document.getElementById('uploadText');
     const uploadSpinner = document.getElementById('uploadSpinner');
-    
     uploadBtn.disabled = true;
     uploadText.textContent = 'Uploading...';
     uploadSpinner.style.display = 'block';
+    showUploadStatus('📤 Processing your file...');
     
     try {
-        // Show upload status
-        showUploadStatus('📤 Processing your file...');
-        
-        // Simulate upload delay
+        // Simulate upload (for now - we'll add real storage later)
         await new Promise(resolve => setTimeout(resolve, 1500));
         
-        // Create a local URL for the file
-        const localUrl = URL.createObjectURL(file);
-        
-        // Create song object
+        // Create song object (temporary - will be replaced with real storage)
         const songData = {
             id: Date.now().toString(),
             shortName: shortName,
             fileName: file.name,
             fileSize: file.size,
-            fileUrl: localUrl,
+            // TEMPORARY: Simulated URL - will be real Internet Archive/GitHub URL later
+            fileUrl: `https://storage.samp-music.com/${shortName}.mp3`,
             uploadedBy: displayName,
             uploadDate: new Date().toISOString(),
             playCount: 0
         };
         
-        // Save to local storage
+        // Save to local storage (temporary)
         saveSongToStorage(songData);
         
-        // Show success modal
+        // Show success
         showSuccessModal(songData.fileUrl);
         
         // Clear form
@@ -216,14 +132,11 @@ async function uploadSong() {
         // Update library
         renderSongList();
         
-        // Show success message
-        showUploadStatus('✅ Upload successful! URL generated below.', 'success');
+        showUploadStatus('✅ Upload successful!', 'success');
         
     } catch (error) {
-        console.error('Upload error:', error);
-        showUploadStatus(`❌ Upload failed: ${error.message}`, 'error');
+        showUploadStatus(`❌ Error: ${error.message}`, 'error');
     } finally {
-        // Re-enable upload button
         uploadBtn.disabled = false;
         uploadText.textContent = 'Upload Song';
         uploadSpinner.style.display = 'none';
@@ -233,37 +146,19 @@ async function uploadSong() {
 function showUploadStatus(message, type = 'info') {
     const statusEl = document.getElementById('uploadStatus');
     statusEl.innerHTML = message;
-    statusEl.className = 'status-box';
-    
-    if (type === 'error') {
-        statusEl.classList.add('error');
-    }
-    
+    statusEl.className = 'status-box ' + (type === 'error' ? 'error' : '');
     statusEl.style.display = 'block';
-    
-    // Auto-hide info messages after 5 seconds
-    if (type === 'info') {
-        setTimeout(() => {
-            statusEl.style.display = 'none';
-        }, 5000);
-    }
+    if (type === 'info') setTimeout(() => { statusEl.style.display = 'none'; }, 5000);
 }
 
-// =============================================
-// LIBRARY MANAGEMENT
-// =============================================
-
+// Library Functions
 function loadSongsFromStorage() {
     const savedSongs = localStorage.getItem('samp_songs');
-    if (savedSongs) {
-        allSongs = JSON.parse(savedSongs);
-    } else {
-        allSongs = [];
-    }
+    allSongs = savedSongs ? JSON.parse(savedSongs) : [];
 }
 
 function saveSongToStorage(song) {
-    allSongs.unshift(song); // Add to beginning
+    allSongs.unshift(song);
     localStorage.setItem('samp_songs', JSON.stringify(allSongs));
     updateSongCount();
 }
@@ -284,13 +179,12 @@ function renderSongList() {
     }
     
     let html = '';
-    
     allSongs.forEach(song => {
         const fileSizeMB = (song.fileSize / 1024 / 1024).toFixed(2);
         const uploadDate = new Date(song.uploadDate).toLocaleDateString();
         
         html += `
-            <div class="song-item" data-song-id="${song.id}">
+            <div class="song-item">
                 <div class="song-header">
                     <div class="song-title">${song.shortName}</div>
                     <div class="song-actions">
@@ -301,15 +195,9 @@ function renderSongList() {
                 <div class="song-meta">
                     Uploaded by: <strong>${song.uploadedBy}</strong> • 
                     Date: ${uploadDate} • 
-                    Size: ${fileSizeMB} MB • 
-                    Plays: ${song.playCount}
+                    Size: ${fileSizeMB} MB
                 </div>
-                <div class="url-display">
-                    ${song.fileUrl}
-                </div>
-                <div class="song-help">
-                    <small>Use in SA:MP: <code>/stream ${song.fileUrl}</code></small>
-                </div>
+                <div class="url-display">${song.fileUrl}</div>
             </div>
         `;
     });
@@ -319,36 +207,23 @@ function renderSongList() {
 
 function searchSongs() {
     const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-    const songItems = document.querySelectorAll('.song-item');
-    
-    songItems.forEach(item => {
-        const songText = item.textContent.toLowerCase();
-        if (songText.includes(searchTerm)) {
-            item.style.display = 'block';
-        } else {
-            item.style.display = 'none';
-        }
+    document.querySelectorAll('.song-item').forEach(item => {
+        item.style.display = item.textContent.toLowerCase().includes(searchTerm) ? 'block' : 'none';
     });
 }
 
 function updateSongCount() {
-    const countEl = document.getElementById('songCount');
-    if (countEl) {
-        countEl.textContent = allSongs.length;
-    }
+    document.getElementById('songCount').textContent = allSongs.length;
 }
 
 function copyUrl(url) {
     navigator.clipboard.writeText(url).then(() => {
-        alert('✅ URL copied to clipboard!\n\nUse in SA:MP:\n/stream ' + url);
-    }).catch(err => {
-        console.error('Failed to copy:', err);
-        alert('❌ Failed to copy URL. Please copy manually.');
+        alert('✅ URL copied to clipboard!');
     });
 }
 
 function deleteSong(songId) {
-    if (confirm('Are you sure you want to delete this song from your library?')) {
+    if (confirm('Delete this song from library?')) {
         allSongs = allSongs.filter(song => song.id !== songId);
         localStorage.setItem('samp_songs', JSON.stringify(allSongs));
         renderSongList();
@@ -356,20 +231,7 @@ function deleteSong(songId) {
     }
 }
 
-function clearLibrary() {
-    if (confirm('Clear all songs from your library?')) {
-        allSongs = [];
-        localStorage.removeItem('samp_songs');
-        renderSongList();
-        updateSongCount();
-        alert('Library cleared.');
-    }
-}
-
-// =============================================
-// MODAL FUNCTIONS
-// =============================================
-
+// Modal Functions
 function showSuccessModal(url) {
     document.getElementById('successUrl').textContent = url;
     document.getElementById('successModal').style.display = 'flex';
@@ -380,40 +242,6 @@ function closeModal() {
 }
 
 function copySuccessUrl() {
-    const url = document.getElementById('successUrl').textContent;
-    copyUrl(url);
+    copyUrl(document.getElementById('successUrl').textContent);
     closeModal();
 }
-
-// =============================================
-// KEYBOARD SHORTCUTS
-// =============================================
-
-document.addEventListener('keydown', function(e) {
-    // Ctrl/Cmd + Number shortcuts for tabs
-    if (e.ctrlKey || e.metaKey) {
-        switch(e.key) {
-            case '1':
-                e.preventDefault();
-                showTab('home');
-                break;
-            case '2':
-                e.preventDefault();
-                showTab('upload');
-                break;
-            case '3':
-                e.preventDefault();
-                showTab('library');
-                break;
-            case '4':
-                e.preventDefault();
-                showTab('settings');
-                break;
-        }
-    }
-    
-    // Escape to close modal
-    if (e.key === 'Escape') {
-        closeModal();
-    }
-});
