@@ -3,6 +3,6 @@
   "version": "1.0.0",
   "dependencies": {
     "@aws-sdk/client-s3": "^3.490.0",
-    "uuid": "^9.0.1"
+    "busboy": "^1.6.0"
   }
 }
