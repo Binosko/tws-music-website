@@ -77,6 +77,38 @@ function loadDisplayName() {
     }
 }
 
+// ==================== SETTINGS ====================
+function loadDisplayName() {
+    const savedName = localStorage.getItem('tws_displayName');
+    if (savedName) {
+        document.getElementById('displayName').value = savedName;
+    }
+}
+
+// ADD THIS FUNCTION - IT'S MISSING!
+function updateUserInfo() {
+    const displayName = localStorage.getItem('tws_displayName') || 'Guest';
+    const userInfoEl = document.getElementById('userInfo');
+    if (userInfoEl) {
+        userInfoEl.textContent = `👤 ${displayName}`;
+    }
+}
+
+function saveSettings() {
+    const displayName = document.getElementById('displayName')?.value.trim() || 'Anonymous';
+    localStorage.setItem('tws_displayName', displayName);
+    
+    const userInfo = document.getElementById('userInfo');
+    if (userInfo) userInfo.textContent = `👤 ${displayName}`;
+    
+    const status = document.getElementById('settingsStatus');
+    if (status) {
+        status.innerHTML = `✅ Settings saved!`;
+        status.style.display = 'block';
+        setTimeout(() => status.style.display = 'none', 3000);
+    }
+}
+
 function saveSettings() {
     const displayName = document.getElementById('displayName')?.value.trim() || 'Anonymous';
     localStorage.setItem('tws_displayName', displayName);
