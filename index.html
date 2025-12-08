@@ -1,96 +1,211 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script defer src="/_vercel/insights/script.js"></script>
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/@exampledev/new.css@1.1.2/new.min.css"
-    />
-    <title>Vercel HTML Starter</title>
-    <meta
-      name="description"
-      content="High-performance HTML based website template."
-    />
-  </head>
-  <body>
-    <h1>Vercel HTML Starter</h1>
-    <p>
-      This template is a simple, but powerful single
-      <code>index.html</code> file deployed to
-      <a href="https://vercel.com">Vercel</a>. When your site is deployed, all
-      static assets (like HTML, JavaScript, CSS, images, and more) are deployed
-      globally to every
-      <a href="https://vercel.com/docs/concepts/edge-network/overview"
-        >Vercel Edge Network</a
-      >
-      region.
-    </p>
-    <h2>Simple, privacy-friendly analytics</h2>
-    <p>
-      Want to understand your visitor traffic? Vercel Analytics gives you
-      first-party, privacy-friendly traffic analytics for your HTML site. This
-      template is already configured using the following script:
-    </p>
-    <pre><code>&lt;script defer src="/_vercel/insights/script.js"&gt;&lt;/script&gt;</code></pre>
-    <p>
-      Learn more about
-      <a href="https://vercel.com/analytics">Vercel Analytics</a>.
-    </p>
-    <h2>Integrated with git</h2>
-    <p>
-      Deploying updates to your site is as simple as
-      <code>git push</code> thanks to Vercel's advanced
-      <a href="https://vercel.com/docs/concepts/git">Git Integration</a>.
-      Support for GitHub, GitLab, Bitbucket is zero-configuration, and with the
-      flexible Vercel CLI and API, you can integrate with any tool possible.
-    </p>
-    <p>
-      Learn more about
-      <a href="https://vercel.com/docs/concepts/git">Git Integration</a>.
-    </p>
-    <h2>Fast <code>gzip</code> compression</h2>
-    <p>
-      To help ensure the smallest possible file sizes for your static assets,
-      the Vercel Edge Network compresses files by default using
-      <code>gzip</code>. You can also optionally use
-      <code>brotli</code> compressesion if you prefer.
-    </p>
-    <p>
-      Learn more about
-      <a href="https://vercel.com/docs/concepts/edge-network/compression"
-        >compression</a
-      >.
-    </p>
-    <h2>Advanced routing configuration</h2>
-    <p>
-      Vercel gives you a variety of ways to configure the routing of your
-      website. For example, adding redirects, rewrites, or headers to your page.
-      While you can use <code>vercel.json</code> to define these through JSON,
-      you can also express your routing configuration as code using
-      <a href="https://vercel.com/docs/concepts/functions/edge-middleware"
-        >Vercel Edge Middleware</a
-      >.
-    </p>
-    <p>
-      Middleware runs before the
-      <a href="https://vercel.com/docs/concepts/edge-network/caching"
-        >Vercel Edge Network Cache</a
-      >, so you can configure routing exactly as your application needs. For
-      example, this template uses <code>middleware.js</code> defined in the root
-      of the repository to add additional security headers to the site:
-    </p>
-    <pre><code>referrer-policy: origin-when-cross-origin
-strict-transport-security: max-age=31536000; includeSubDomains; preload
-x-content-type-options: nosniff
-x-dns-prefetch-control: on
-x-frame-options: DENY</code></pre>
-    <p>
-      Learn more about
-      <a href="https://vercel.com/docs/concepts/functions/edge-middleware"
-        >Vercel Edge Middleware</a
-      >.
-    </p>
-  </body>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SA:MP Music Streamer</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎵</text></svg>">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-content">
+                <h1>🎵 SA:MP Music Streamer</h1>
+                <p class="subtitle">Upload & stream MP3 files for GTA San Andreas Multiplayer</p>
+            </div>
+            <div class="user-info" id="userInfo">Guest</div>
+        </header>
+
+        <nav class="tabs">
+            <button class="tab-btn active" onclick="showTab('home')">
+                <span>🏠</span> Home
+            </button>
+            <button class="tab-btn" onclick="showTab('upload')">
+                <span>📤</span> Upload
+            </button>
+            <button class="tab-btn" onclick="showTab('library')">
+                <span>📚</span> Library
+            </button>
+            <button class="tab-btn" onclick="showTab('settings')">
+                <span>⚙️</span> Settings
+            </button>
+        </nav>
+
+        <main>
+            <!-- HOME TAB -->
+            <section id="home" class="tab-content active">
+                <div class="card">
+                    <h2>Welcome to SA:MP Music Streaming!</h2>
+                    <p>This website allows you to upload MP3 files and get permanent streaming links for GTA San Andreas Multiplayer.</p>
+                    
+                    <div class="features">
+                        <div class="feature">
+                            <div class="feature-icon">🎵</div>
+                            <h3>Free Storage</h3>
+                            <p>All files stored with permanent links</p>
+                        </div>
+                        <div class="feature">
+                            <div class="feature-icon">🔗</div>
+                            <h3>Permanent Links</h3>
+                            <p>Get URLs that never expire for SA:MP streaming</p>
+                        </div>
+                        <div class="feature">
+                            <div class="feature-icon">👤</div>
+                            <h3>Display Names</h3>
+                            <p>Set your display name to appear as uploader</p>
+                        </div>
+                    </div>
+
+                    <div class="instructions">
+                        <h3>How to Use:</h3>
+                        <ol>
+                            <li><strong>Set Display Name:</strong> Go to Settings tab first</li>
+                            <li><strong>Upload MP3:</strong> Go to Upload tab, fill details</li>
+                            <li><strong>Copy URL:</strong> Go to Library tab, find your song</li>
+                            <li><strong>Use in SA:MP:</strong> Type <code>/stream [URL]</code> in-game</li>
+                        </ol>
+                    </div>
+
+                    <div class="info-box">
+                        <strong>📝 Important:</strong>
+                        <ul>
+                            <li>Upload password: <code>ridingisFun123!</code></li>
+                            <li>Max file size: 100MB per song</li>
+                            <li>Only upload music you have rights to</li>
+                            <li>Files are stored permanently</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- UPLOAD TAB -->
+            <section id="upload" class="tab-content">
+                <div class="card">
+                    <h2>📤 Upload MP3</h2>
+                    <p class="card-subtitle">Upload MP3 files and get streaming URLs</p>
+                    
+                    <div class="upload-form">
+                        <div class="form-group">
+                            <label for="shortName">Short Name *</label>
+                            <input type="text" id="shortName" placeholder="Example: Binosko-Theme-A" maxlength="50">
+                            <small>No spaces. Use letters, numbers, and dashes only.</small>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="mp3File">MP3 File *</label>
+                            <div class="file-upload">
+                                <input type="file" id="mp3File" accept=".mp3,.MP3" onchange="showFileInfo()">
+                                <div id="fileInfo"></div>
+                            </div>
+                            <small>Maximum file size: 100MB. Only MP3 files allowed.</small>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="uploadPassword">Upload Password *</label>
+                            <input type="password" id="uploadPassword" placeholder="Enter the upload password">
+                            <small>Password required to prevent spam uploads.</small>
+                        </div>
+                        
+                        <button id="uploadBtn" class="primary-btn" onclick="uploadSong()">
+                            <span id="uploadText">Upload Song</span>
+                            <div id="uploadSpinner" class="spinner" style="display: none;"></div>
+                        </button>
+                    </div>
+                    
+                    <div id="uploadStatus" class="status-box"></div>
+                    
+                    <div class="upload-note">
+                        <p><strong>Note:</strong> For now, this saves songs locally. Internet Archive integration coming soon.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- LIBRARY TAB -->
+            <section id="library" class="tab-content">
+                <div class="card">
+                    <h2>📚 Music Library</h2>
+                    <p class="card-subtitle">Browse all uploaded songs and copy streaming URLs</p>
+                    
+                    <div class="library-controls">
+                        <div class="search-container">
+                            <input type="text" id="searchInput" placeholder="Search by name or uploader..." oninput="searchSongs()">
+                            <div class="search-icon">🔍</div>
+                        </div>
+                        <div class="stats">
+                            <span id="songCount">0</span> songs
+                        </div>
+                    </div>
+                    
+                    <div id="songList" class="song-list">
+                        <div class="empty-state">
+                            <div class="empty-icon">📭</div>
+                            <h3>No songs uploaded yet</h3>
+                            <p>Be the first to upload a song!</p>
+                            <button class="secondary-btn" onclick="showTab('upload')">Upload First Song</button>
+                        </div>
+                    </div>
+                    
+                    <div class="library-help">
+                        <p><strong>How to use in SA:MP:</strong> Copy the URL and use command <code>/stream [URL]</code></p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SETTINGS TAB -->
+            <section id="settings" class="tab-content">
+                <div class="card">
+                    <h2>⚙️ Settings</h2>
+                    
+                    <div class="settings-form">
+                        <div class="form-group">
+                            <label for="displayName">Display Name</label>
+                            <input type="text" id="displayName" placeholder="Enter your display name">
+                            <small>This name will appear next to your uploaded songs.</small>
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button class="primary-btn" onclick="saveSettings()">Save Settings</button>
+                            <button class="secondary-btn" onclick="clearLibrary()">Clear Local Library</button>
+                        </div>
+                        
+                        <div id="settingsStatus" class="status-box"></div>
+                    </div>
+                    
+                    <div class="settings-info">
+                        <h3>About This Site</h3>
+                        <ul>
+                            <li><strong>Storage:</strong> Local browser storage (for now)</li>
+                            <li><strong>Hosting:</strong> Vercel (free)</li>
+                            <li><strong>Password:</strong> ridingisFun123!</li>
+                            <li><strong>File Limit:</strong> 100MB per song</li>
+                        </ul>
+                        <p class="version">Version 1.0 • Made for SA:MP Community</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>SA:MP Music Streamer • Use command <code>/stream [URL]</code> in SA:MP</p>
+            <p class="footer-note">Note: Songs are saved locally in your browser for now</p>
+        </footer>
+    </div>
+
+    <!-- Success Modal -->
+    <div id="successModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-icon">✅</div>
+            <h3>Upload Successful!</h3>
+            <div class="url-display" id="successUrl"></div>
+            <p>Use this URL in SA:MP with <code>/stream [URL]</code></p>
+            <div class="modal-actions">
+                <button class="primary-btn" onclick="copySuccessUrl()">Copy URL</button>
+                <button class="secondary-btn" onclick="closeModal()">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
 </html>
