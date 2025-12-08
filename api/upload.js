@@ -1,5 +1,3 @@
-import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
-
 export const config = {
   api: {
     bodyParser: false,
@@ -7,21 +5,19 @@ export const config = {
 };
 
 export default async function handler(req, res) {
-  console.log('=== UPLOAD START ===');
+  console.log('=== GITHUB UPLOAD API ===');
   
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
   try {
-    // Get raw body
+    // Parse multipart form data
     const buffers = [];
     for await (const chunk of req) {
       buffers.push(chunk);
     }
     const rawBody = Buffer.concat(buffers);
-    
-    // Convert to string for parsing
     const bodyString = rawBody.toString('binary');
     
     // Get boundary
@@ -29,14 +25,15 @@ export default async function handler(req, res) {
     const boundaryMatch = contentType.match(/boundary=([^;]+)/);
     
     if (!boundaryMatch) {
-      return res.status(400).json({ error: 'No boundary found' });
+      return res.status(400).json({ error: 'No boundary found in Content-Type' });
     }
     
     const boundary = boundaryMatch[1];
     const parts = bodyString.split(`--${boundary}`);
     
-    // Parse form data
-    let shortName = '', password = '', displayName = '', fileContent = null;
+    // Parse form fields
+    let shortName = '', password = '', displayName = '', fileBuffer = null;
+    let fileName = '';
     
     for (const part of parts) {
       if (part.includes('Content-Disposition: form-data')) {
@@ -45,121 +42,141 @@ export default async function handler(req, res) {
         if (!nameMatch) continue;
         
         const fieldName = nameMatch[1];
-        const valueMatch = part.match(/\r\n\r\n([\s\S]*?)\r\n/);
         
         if (fieldName === 'file') {
-          // It's a file - get the actual content
-          const fileMatch = part.match(/\r\n\r\n([\s\S]*)/);
-          if (fileMatch) {
-            fileContent = Buffer.from(fileMatch[1], 'binary');
+          // Extract filename
+          const filenameMatch = part.match(/filename="([^"]+)"/);
+          if (filenameMatch) {
+            fileName = filenameMatch[1];
+            // Get file content (after headers)
+            const fileContentMatch = part.match(/\r\n\r\n([\s\S]*)/);
+            if (fileContentMatch) {
+              fileBuffer = Buffer.from(fileContentMatch[1], 'binary');
+            }
           }
-        } else if (valueMatch) {
-          // It's a regular field
-          const value = valueMatch[1].trim();
-          
-          if (fieldName === 'shortName') shortName = value;
-          else if (fieldName === 'password') password = value;
-          else if (fieldName === 'displayName') displayName = value;
+        } else {
+          // Regular form field
+          const valueMatch = part.match(/\r\n\r\n([\s\S]*?)\r\n/);
+          if (valueMatch) {
+            const value = valueMatch[1].trim();
+            
+            if (fieldName === 'shortName') shortName = value;
+            else if (fieldName === 'password') password = value;
+            else if (fieldName === 'displayName') displayName = value;
+          }
         }
       }
     }
     
-    console.log('Parsed:', { 
+    console.log('Parsed form:', { 
       shortName, 
-      password: password ? '***' : 'missing',
-      displayName,
-      fileSize: fileContent?.length || 0
+      displayName, 
+      fileName,
+      fileSize: fileBuffer?.length || 0 
     });
     
-    // Validate
-    if (!shortName || !password || !fileContent) {
+    // Validation
+    if (!shortName || !password || !fileBuffer) {
       return res.status(400).json({ 
-        error: 'Missing fields',
+        error: 'Missing required fields',
         hasShortName: !!shortName,
         hasPassword: !!password,
-        hasFile: !!fileContent
+        hasFile: !!fileBuffer
       });
     }
     
-    // Check password
+    // Check upload password
     const UPLOAD_PASS = process.env.UPLOAD_PASSWORD || 'ridingisFun123!';
     if (password !== UPLOAD_PASS) {
-      return res.status(401).json({ error: 'Invalid password' });
+      return res.status(401).json({ error: 'Invalid upload password' });
     }
     
-    // Get IA keys
-    const IA_KEY = process.env.IA_ACCESS_KEY;
-    const IA_SECRET = process.env.IA_SECRET_KEY;
+    // Get GitHub credentials
+    const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
+    const GITHUB_USERNAME = process.env.GITHUB_USERNAME;
     
-    if (!IA_KEY || !IA_SECRET) {
+    if (!GITHUB_TOKEN || !GITHUB_USERNAME) {
       return res.status(500).json({ 
-        error: 'Internet Archive keys not configured',
-        hasAccessKey: !!IA_KEY,
-        hasSecretKey: !!IA_SECRET
+        error: 'GitHub configuration missing',
+        hasToken: !!GITHUB_TOKEN,
+        hasUsername: !!GITHUB_USERNAME,
+        help: 'Set GITHUB_TOKEN and GITHUB_USERNAME in Vercel Environment Variables'
       });
     }
     
-    // Clean name for URL
+    // Clean filename for URL
     const cleanName = shortName.toLowerCase().replace(/[^a-z0-9]/g, '-');
-    const identifier = `tws-music-${cleanName}-${Date.now()}`;
-    const fileName = `${cleanName}.mp3`;
+    const finalFileName = `${cleanName}.mp3`;
     
-    console.log('Uploading to IA:', identifier);
+    // GitHub API: Upload file
+    const githubApiUrl = `https://api.github.com/repos/${GITHUB_USERNAME}/tws-music-storage/contents/${finalFileName}`;
     
-    // Create S3 client
-    const s3Client = new S3Client({
-      endpoint: 'https://s3.us.archive.org',
-      region: 'us-east-1',
-      credentials: {
-        accessKeyId: IA_KEY,
-        secretAccessKey: IA_SECRET,
+    console.log('Uploading to GitHub:', githubApiUrl);
+    
+    const githubResponse = await fetch(githubApiUrl, {
+      method: 'PUT',
+      headers: {
+        'Authorization': `token ${GITHUB_TOKEN}`,
+        'Content-Type': 'application/json',
+        'User-Agent': 'TWS-Music-Uploader'
       },
-      forcePathStyle: true,
+      body: JSON.stringify({
+        message: `Upload: ${shortName} by ${displayName || 'Anonymous'}`,
+        content: fileBuffer.toString('base64'),
+        branch: 'main'
+      })
     });
     
-    // Upload to Internet Archive
-    const uploadParams = {
-      Bucket: identifier,
-      Key: fileName,
-      Body: fileContent,
-      ContentType: 'audio/mpeg',
-      Metadata: {
-        'x-archive-auto-make-bucket': '1',
-        'x-archive-meta-title': shortName,
-        'x-archive-meta-creator': displayName || 'Anonymous'
-      },
-    };
+    const githubResult = await githubResponse.json();
     
-    console.log('Sending to Internet Archive...');
-    const result = await s3Client.send(new PutObjectCommand(uploadParams));
-    console.log('IA Response:', result);
+    console.log('GitHub API response:', {
+      status: githubResponse.status,
+      message: githubResult.message,
+      url: githubResult.content?.download_url
+    });
     
-    // Generate public URL
-    const archiveUrl = `https://archive.org/download/${identifier}/${fileName}`;
+    if (!githubResponse.ok) {
+      throw new Error(githubResult.message || `GitHub upload failed (${githubResponse.status})`);
+    }
     
-    console.log('✅ SUCCESS! URL:', archiveUrl);
+    // Generate public raw URL (for SA:MP streaming)
+    const rawUrl = `https://raw.githubusercontent.com/${GITHUB_USERNAME}/tws-music-storage/main/${finalFileName}`;
+    
+    console.log('✅ Upload successful! Raw URL:', rawUrl);
     
     res.status(200).json({
       success: true,
-      url: archiveUrl,
-      identifier: identifier,
-      message: 'Uploaded to Internet Archive successfully!'
+      url: rawUrl,
+      fileName: finalFileName,
+      shortName: shortName,
+      uploadedBy: displayName || 'Anonymous',
+      githubUrl: githubResult.content?.html_url,
+      message: 'File uploaded to GitHub successfully!'
     });
     
   } catch (error) {
-    console.error('❌ UPLOAD ERROR:', error);
-    console.error('Error name:', error.name);
-    console.error('Error code:', error.Code);
-    console.error('Error message:', error.message);
+    console.error('❌ Upload error:', error);
     
-    // Return detailed error
+    // Provide helpful error messages
+    let errorMessage = error.message;
+    let helpText = 'Check GitHub token and repository permissions';
+    
+    if (error.message.includes('403') || error.message.includes('bad credentials')) {
+      errorMessage = 'Invalid GitHub token. Generate a new token with repo permissions.';
+      helpText = 'Go to https://github.com/settings/tokens and create new token with "repo" scope';
+    } else if (error.message.includes('404') || error.message.includes('Not Found')) {
+      errorMessage = 'GitHub repository not found. Make sure "tws-music-storage" exists.';
+      helpText = 'Create repository at: https://github.com/new (name: tws-music-storage)';
+    } else if (error.message.includes('large')) {
+      errorMessage = 'File too large for GitHub. Max 100MB per file.';
+      helpText = 'Use smaller MP3 files (under 100MB)';
+    }
+    
     res.status(500).json({
       success: false,
       error: 'Upload failed',
-      errorName: error.name,
-      errorCode: error.Code,
-      details: error.message,
-      help: 'Check Internet Archive API keys and file format'
+      details: errorMessage,
+      help: helpText
     });
   }
 }
