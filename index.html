@@ -207,7 +207,168 @@
     color: #E91E63;
     border-bottom-color: #E91E63;
 }
-        
+      
+.section-commands {
+    border-left-color: #FF9800;
+}
+
+.section-commands .section-title {
+    color: #FF9800;
+    border-bottom-color: #FF9800;
+}
+
+/* Command Search */
+.command-search-container {
+    position: relative;
+    margin: 25px 0;
+}
+
+.command-search {
+    width: 100%;
+    padding: 15px 20px 15px 50px;
+    background-color: var(--samp-dark);
+    border: 2px solid var(--samp-border);
+    border-radius: 8px;
+    color: var(--samp-text);
+    font-size: 1rem;
+    transition: all 0.3s;
+}
+
+.command-search:focus {
+    outline: none;
+    border-color: var(--samp-orange);
+    box-shadow: 0 0 0 3px rgba(255, 152, 0, 0.2);
+}
+
+.command-search-icon {
+    position: absolute;
+    left: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--samp-yellow);
+    font-size: 1.2rem;
+}
+
+/* Command Categories */
+.command-categories {
+    display: flex;
+    gap: 10px;
+    margin: 20px 0;
+    flex-wrap: wrap;
+}
+
+.category-btn {
+    background-color: var(--samp-dark);
+    border: 2px solid var(--samp-border);
+    color: var(--samp-text);
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-weight: bold;
+}
+
+.category-btn:hover,
+.category-btn.active {
+    background-color: var(--samp-orange);
+    border-color: var(--samp-orange);
+    color: white;
+    transform: translateY(-2px);
+}
+
+/* Command Cards */
+.command-card {
+    background-color: var(--samp-dark);
+    border: 1px solid var(--samp-border);
+    border-radius: 8px;
+    padding: 20px;
+    margin: 15px 0;
+    transition: all 0.3s;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.command-card.hidden {
+    display: none;
+    opacity: 0;
+    transform: translateY(10px);
+}
+
+.command-card:hover {
+    border-color: var(--samp-orange);
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(255, 152, 0, 0.1);
+}
+
+.command-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.command-name {
+    color: var(--samp-yellow);
+    font-family: 'Courier New', monospace;
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+
+.command-category {
+    display: inline-block;
+    background-color: rgba(255, 152, 0, 0.2);
+    color: var(--samp-orange);
+    padding: 3px 10px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    margin-left: auto;
+}
+
+.command-description {
+    color: #aaa;
+    line-height: 1.5;
+}
+
+.command-alias {
+    display: inline-block;
+    background-color: rgba(76, 175, 80, 0.1);
+    color: var(--samp-green);
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    margin-left: 10px;
+    font-family: 'Courier New', monospace;
+}
+
+/* Command Count */
+.command-count {
+    display: inline-block;
+    background-color: var(--samp-orange);
+    color: white;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    margin-left: 10px;
+    animation: pulse 2s infinite;
+}
+
+/* Animations for command cards */
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.command-card {
+    animation: slideIn 0.5s ease-out forwards;
+}
+	  
         /* Command Box - Enhanced */
         .command-box {
             background-color: var(--samp-dark);
@@ -656,6 +817,7 @@
                     <li><a href="#item-crafting">🧪 Item Crafting</a></li>
                     <li><a href="#weapon-crafting">🔫 Weapon Crafting</a></li>
                     <li><a href="#skins">👕 Skins</a></li>
+					<li><a href="#commands">⌨️ Commands</a></li>
                     <li><a href="#warehouses">🏭 Warehouses</a></li>
                     <li><a href="#sidequests">📋 Side Quests</a></li>
                 </ul>
@@ -826,7 +988,7 @@
                 WOODCUTTING SYSTEM <span class="section-counter">2</span>
             </h2>
             
-            <p>Woodcutting is essential for construction and crafting. Use <span class="command">/cuttree</span> near marked trees.</p>
+            <p>Woodcutting is essential for construction, crafting, and fuel. Use <span class="command">/cuttree</span> near marked trees.</p>
             
             <h3 style="color: var(--samp-green); margin: 25px 0 15px 0;">Tree Types:</h3>
             
@@ -1794,6 +1956,616 @@
         </div>
     </div>
 </section>
+
+<!-- ==================== -->
+<!-- COMMANDS SECTION -->
+<!-- ==================== -->
+<section id="commands" class="section section-commands">
+    <h2 class="section-title">
+        <span class="section-icon">⌨️</span>
+        COMPLETE COMMANDS GUIDE <span class="section-counter">12</span>
+        <span class="command-count" id="commandCount">0 commands</span>
+    </h2>
+    
+    <p>Search and browse through all available commands in That War Server. Click on categories to filter, or search for specific commands.</p>
+    
+    <!-- SEARCH BAR -->
+    <div class="command-search-container">
+        <span class="command-search-icon">🔍</span>
+        <input type="text" id="commandSearch" class="command-search" placeholder="Search commands (e.g., /fish, /house, animation)">
+        <div style="color: #aaa; font-size: 0.8rem; margin-top: 5px; text-align: right;">Type to filter commands</div>
+    </div>
+    
+    <!-- CATEGORY FILTERS -->
+    <div class="command-categories">
+        <button class="category-btn active" data-category="all">All Commands</button>
+        <button class="category-btn" data-category="help">Help Commands</button>
+        <button class="category-btn" data-category="animation">Animations</button>
+        <button class="category-btn" data-category="chat">Chat</button>
+        <button class="category-btn" data-category="clan">Clan</button>
+        <button class="category-btn" data-category="crafting">Crafting</button>
+        <button class="category-btn" data-category="housing">Housing</button>
+        <button class="category-btn" data-category="vehicle">Vehicle</button>
+        <button class="category-btn" data-category="skill">Skills</button>
+        <button class="category-btn" data-category="misc">Miscellaneous</button>
+    </div>
+    
+    <!-- COMMANDS LIST -->
+    <div id="commandsList">
+        <!-- Help Commands -->
+        <div class="command-card" data-categories="help">
+            <div class="command-header">
+                <div class="command-name">/help</div>
+                <span class="command-category">Help</span>
+            </div>
+            <div class="command-description">View all available commands in-game</div>
+        </div>
+        
+        <div class="command-card" data-categories="help">
+            <div class="command-header">
+                <div class="command-name">/carhelp</div>
+                <span class="command-category">Help</span>
+            </div>
+            <div class="command-description">Shows commands for controlling your vehicle's trunk, boot and lights</div>
+        </div>
+        
+        <div class="command-card" data-categories="help">
+            <div class="command-header">
+                <div class="command-name">/stallhelp</div>
+                <span class="command-category">Help</span>
+            </div>
+            <div class="command-description">Shows commands used to manage your market stall</div>
+        </div>
+        
+        <div class="command-card" data-categories="help">
+            <div class="command-header">
+                <div class="command-name">/markethelp</div>
+                <span class="command-category">Help</span>
+            </div>
+            <div class="command-description">Shows commands that can be used in the market (green zone)</div>
+        </div>
+        
+        <div class="command-card" data-categories="help animation">
+            <div class="command-header">
+                <div class="command-name">/animlist</div>
+                <span class="command-category">Help/Animation</span>
+            </div>
+            <div class="command-description">Shows the complete animations list</div>
+        </div>
+        
+        <!-- Side Quest Commands -->
+        <div class="command-card" data-categories="skill">
+            <div class="command-header">
+                <div class="command-name">/takesidequest</div>
+                <span class="command-category">Side Quest</span>
+            </div>
+            <div class="command-description">Take a side quest from an NPC</div>
+        </div>
+        
+        <div class="command-card" data-categories="skill">
+            <div class="command-header">
+                <div class="command-name">/completesidequest</div>
+                <span class="command-category">Side Quest</span>
+            </div>
+            <div class="command-description">Verify and complete the side quest to receive reward</div>
+        </div>
+        
+        <div class="command-card" data-categories="skill">
+            <div class="command-header">
+                <div class="command-name">/cancelsidequest</div>
+                <span class="command-category">Side Quest</span>
+            </div>
+            <div class="command-description">Cancel your previous side quest to start a new one</div>
+        </div>
+        
+        <!-- Utility Commands -->
+        <div class="command-card" data-categories="misc">
+            <div class="command-header">
+                <div class="command-name">/test</div>
+                <span class="command-category">Utility</span>
+            </div>
+            <div class="command-description">Shows your current ping</div>
+        </div>
+        
+        <div class="command-card" data-categories="misc">
+            <div class="command-header">
+                <div class="command-name">/locate</div>
+                <span class="command-alias">/loc</span>
+                <span class="command-category">Utility</span>
+            </div>
+            <div class="command-description">Shows the current distance between you and your target</div>
+        </div>
+        
+        <div class="command-card" data-categories="misc">
+            <div class="command-header">
+                <div class="command-name">/tprequest</div>
+                <span class="command-category">Utility</span>
+            </div>
+            <div class="command-description">Sends a teleport request to a player</div>
+        </div>
+        
+        <div class="command-card" data-categories="misc">
+            <div class="command-header">
+                <div class="command-name">/canceltprequest</div>
+                <span class="command-category">Utility</span>
+            </div>
+            <div class="command-description">Cancel teleport request</div>
+        </div>
+        
+        <div class="command-card" data-categories="misc">
+            <div class="command-header">
+                <div class="command-name">/id</div>
+                <span class="command-category">Utility</span>
+            </div>
+            <div class="command-description">Shows all online/afk players that match with the filled ID or part of the name</div>
+        </div>
+        
+        <div class="command-card" data-categories="misc">
+            <div class="command-header">
+                <div class="command-name">/togglehud</div>
+                <span class="command-alias">/th</span>
+                <span class="command-category">Utility</span>
+            </div>
+            <div class="command-description">Toggles OFF/ON the server's HUD</div>
+        </div>
+        
+        <div class="command-card" data-categories="crafting">
+            <div class="command-header">
+                <div class="command-name">/lightfire</div>
+                <span class="command-category">Crafting</span>
+            </div>
+            <div class="command-description">Lights a fire, useful for healing. Requires 5 wood</div>
+        </div>
+        
+        <div class="command-card" data-categories="misc">
+            <div class="command-header">
+                <div class="command-name">/url</div>
+                <span class="command-category">Utility</span>
+            </div>
+            <div class="command-description">Provides you with the server's forum link</div>
+        </div>
+        
+        <div class="command-card" data-categories="misc">
+            <div class="command-header">
+                <div class="command-name">/lastseen</div>
+                <span class="command-alias">/laston</span>
+                <span class="command-category">Utility</span>
+            </div>
+            <div class="command-description">Check when was the last time a player logged in</div>
+        </div>
+        
+        <!-- Animation Commands -->
+        <div class="command-card" data-categories="animation">
+            <div class="command-header">
+                <div class="command-name">/aim</div>
+                <span class="command-alias">/aim1</span>
+                <span class="command-category">Animation</span>
+            </div>
+            <div class="command-description">Aim animation that can't be found in /animlist</div>
+        </div>
+        
+        <div class="command-card" data-categories="animation">
+            <div class="command-header">
+                <div class="command-name">/walk [1-11]</div>
+                <span class="command-category">Animation</span>
+            </div>
+            <div class="command-description">Change your walking style</div>
+        </div>
+        
+        <div class="command-card" data-categories="animation">
+            <div class="command-header">
+                <div class="command-name">/ciggy</div>
+                <span class="command-category">Animation</span>
+            </div>
+            <div class="command-description">Smoke a cigarette, use it a second time to put it between your lips</div>
+        </div>
+        
+        <div class="command-card" data-categories="animation">
+            <div class="command-header">
+                <div class="command-name">/beer</div>
+                <span class="command-category">Animation</span>
+            </div>
+            <div class="command-description">Opens a bottle of beer from your inventory</div>
+        </div>
+        
+        <div class="command-card" data-categories="animation">
+            <div class="command-header">
+                <div class="command-name">/wine</div>
+                <span class="command-category">Animation</span>
+            </div>
+            <div class="command-description">Opens a bottle of wine from your inventory</div>
+        </div>
+        
+        <!-- Tool Commands -->
+        <div class="command-card" data-categories="misc">
+            <div class="command-header">
+                <div class="command-name">/shovel</div>
+                <span class="command-alias">/spade</span>
+                <span class="command-alias">/diggything</span>
+                <span class="command-category">Tool</span>
+            </div>
+            <div class="command-description">Get a shovel for digging and burying items</div>
+        </div>
+        
+        <div class="command-card" data-categories="misc">
+            <div class="command-header">
+                <div class="command-name">/getcamera</div>
+                <span class="command-category">Tool</span>
+            </div>
+            <div class="command-description">Get a camera that has 31 shots</div>
+        </div>
+        
+        <div class="command-card" data-categories="misc">
+            <div class="command-header">
+                <div class="command-name">/countdown</div>
+                <span class="command-category">Utility</span>
+            </div>
+            <div class="command-description">Starts a countdown</div>
+        </div>
+        
+        <div class="command-card" data-categories="misc">
+            <div class="command-header">
+                <div class="command-name">/chute</div>
+                <span class="command-category">Tool</span>
+            </div>
+            <div class="command-description">Get a parachute</div>
+        </div>
+        
+        <!-- Interaction Commands -->
+        <div class="command-card" data-categories="misc">
+            <div class="command-header">
+                <div class="command-name">/recruit</div>
+                <span class="command-category">Interaction</span>
+            </div>
+            <div class="command-description">Send a quick recruiting message to the designated player</div>
+        </div>
+        
+        <div class="command-card" data-categories="misc">
+            <div class="command-header">
+                <div class="command-name">/moo</div>
+                <span class="command-category">Fun</span>
+            </div>
+            <div class="command-description">Set your inner animal free</div>
+        </div>
+        
+        <div class="command-card" data-categories="animation">
+            <div class="command-header">
+                <div class="command-name">/yell</div>
+                <span class="command-category">Animation</span>
+            </div>
+            <div class="command-description">Yell animation that can't be found in /animlist</div>
+        </div>
+        
+        <!-- Skill Commands -->
+        <div class="command-card" data-categories="skill">
+            <div class="command-header">
+                <div class="command-name">/weed</div>
+                <span class="command-category">Skill</span>
+            </div>
+            <div class="command-description">Consumes 1 gram of weed from your inventory. Helpful for healing during combat</div>
+        </div>
+        
+        <div class="command-card" data-categories="skill">
+            <div class="command-header">
+                <div class="command-name">/fertilise</div>
+                <span class="command-category">Skill</span>
+            </div>
+            <div class="command-description">Vital for your plant's growth. Requires Fertiliser in your inventory</div>
+        </div>
+        
+        <div class="command-card" data-categories="skill">
+            <div class="command-header">
+                <div class="command-name">/cuttree</div>
+                <span class="command-category">Skill</span>
+            </div>
+            <div class="command-description">Used to cut a tree for wood</div>
+        </div>
+        
+        <div class="command-card" data-categories="skill">
+            <div class="command-header">
+                <div class="command-name">/cancelcutting</div>
+                <span class="command-category">Skill</span>
+            </div>
+            <div class="command-description">Used to cancel cutting a tree</div>
+        </div>
+        
+        <!-- Crafting Commands -->
+        <div class="command-card" data-categories="crafting">
+            <div class="command-header">
+                <div class="command-name">/makebox</div>
+                <span class="command-category">Crafting</span>
+            </div>
+            <div class="command-description">Craft an empty box with 10 wood. Required for /craftbox</div>
+        </div>
+        
+        <div class="command-card" data-categories="crafting">
+            <div class="command-header">
+                <div class="command-name">/craftbox</div>
+                <span class="command-category">Crafting</span>
+            </div>
+            <div class="command-description">Craft a weapon using metal and an empty box at the sawmill</div>
+        </div>
+        
+        <!-- Animation Commands List -->
+        <div class="command-card" data-categories="animation">
+            <div class="command-header">
+                <div class="command-name">/hs</div>
+                <span class="command-category">Animation</span>
+            </div>
+            <div class="command-description">Handshake animation</div>
+        </div>
+        
+        <div class="command-card" data-categories="animation">
+            <div class="command-header">
+                <div class="command-name">/forage</div>
+                <span class="command-category">Animation/Skill</span>
+            </div>
+            <div class="command-description">Search for exotic plants to make poison and super-poison</div>
+        </div>
+        
+        <div class="command-card" data-categories="skill">
+            <div class="command-header">
+                <div class="command-name">/harvest</div>
+                <span class="command-category">Skill</span>
+            </div>
+            <div class="command-description">Use it once your plants are fully grown</div>
+        </div>
+        
+        <div class="command-card" data-categories="chat">
+            <div class="command-header">
+                <div class="command-name">/chatmode</div>
+                <span class="command-category">Chat</span>
+            </div>
+            <div class="command-description">Select your chat mode [(l)ocal, (d)iscreet, (s)hout, (p)ublic]</div>
+        </div>
+        
+        <div class="command-card" data-categories="misc">
+            <div class="command-header">
+                <div class="command-name">/dropdown</div>
+                <span class="command-category">Vehicle</span>
+            </div>
+            <div class="command-description">Rappel down from a chopper like a pro (works only in Mavericks)</div>
+        </div>
+        
+        <div class="command-card" data-categories="misc">
+            <div class="command-header">
+                <div class="command-name">/dice</div>
+                <span class="command-category">Fun</span>
+            </div>
+            <div class="command-description">Roll a dice! Let your luck speak!</div>
+        </div>
+        
+        <div class="command-card" data-categories="skill">
+            <div class="command-header">
+                <div class="command-name">/fish</div>
+                <span class="command-category">Skill</span>
+            </div>
+            <div class="command-description">Fish while on a boat (requires driver in static boats)</div>
+        </div>
+        
+        <!-- More Animation Commands -->
+        <div class="command-card" data-categories="animation">
+            <div class="command-header">
+                <div class="command-name">/dance [1-13]</div>
+                <span class="command-category">Animation</span>
+            </div>
+            <div class="command-description">Various dance animations</div>
+        </div>
+        
+        <div class="command-card" data-categories="animation">
+            <div class="command-header">
+                <div class="command-name">/crouch</div>
+                <span class="command-category">Animation</span>
+            </div>
+            <div class="command-description">Crouch animation</div>
+        </div>
+        
+        <div class="command-card" data-categories="animation">
+            <div class="command-header">
+                <div class="command-name">/handsup</div>
+                <span class="command-category">Animation</span>
+            </div>
+            <div class="command-description">Put your hands up</div>
+        </div>
+        
+        <!-- Clan Commands -->
+        <div class="command-card" data-categories="clan">
+            <div class="command-header">
+                <div class="command-name">/createclan</div>
+                <span class="command-category">Clan</span>
+            </div>
+            <div class="command-description">Create a clan</div>
+        </div>
+        
+        <div class="command-card" data-categories="clan">
+            <div class="command-header">
+                <div class="command-name">/clandisband</div>
+                <span class="command-category">Clan</span>
+            </div>
+            <div class="command-description">Disband your created clan</div>
+        </div>
+        
+        <div class="command-card" data-categories="clan">
+            <div class="command-header">
+                <div class="command-name">/claninvite</div>
+                <span class="command-category">Clan</span>
+            </div>
+            <div class="command-description">Invite a person to your clan</div>
+        </div>
+        
+        <!-- Chat Commands -->
+        <div class="command-card" data-categories="chat">
+            <div class="command-header">
+                <div class="command-name">/w</div>
+                <span class="command-category">Chat</span>
+            </div>
+            <div class="command-description">Local chat - only players near you will see the message</div>
+        </div>
+        
+        <div class="command-card" data-categories="chat">
+            <div class="command-header">
+                <div class="command-name">/s</div>
+                <span class="command-category">Chat</span>
+            </div>
+            <div class="command-description">Shout - larger range than /w but not in main chat</div>
+        </div>
+        
+        <div class="command-card" data-categories="chat">
+            <div class="command-header">
+                <div class="command-name">/pm</div>
+                <span class="command-category">Chat</span>
+            </div>
+            <div class="command-description">Privately message someone with their current ID</div>
+        </div>
+        
+        <div class="command-card" data-categories="chat">
+            <div class="command-header">
+                <div class="command-name">/r</div>
+                <span class="command-category">Chat</span>
+            </div>
+            <div class="command-description">Talk in your faction's radio</div>
+        </div>
+        
+        <!-- Housing Commands -->
+        <div class="command-card" data-categories="housing">
+            <div class="command-header">
+                <div class="command-name">/buyhouse</div>
+                <span class="command-category">Housing</span>
+            </div>
+            <div class="command-description">Buy a house</div>
+        </div>
+        
+        <div class="command-card" data-categories="housing">
+            <div class="command-header">
+                <div class="command-name">/house storage</div>
+                <span class="command-category">Housing</span>
+            </div>
+            <div class="command-description">Displays items in your house's storage</div>
+        </div>
+        
+        <div class="command-card" data-categories="housing">
+            <div class="command-header">
+                <div class="command-name">/house store</div>
+                <span class="command-category">Housing</span>
+            </div>
+            <div class="command-description">Put items in your house's storage</div>
+        </div>
+        
+        <div class="command-card" data-categories="housing">
+            <div class="command-header">
+                <div class="command-name">/house lock</div>
+                <span class="command-category">Housing</span>
+            </div>
+            <div class="command-description">Lock or unlock your house</div>
+        </div>
+        
+        <div class="command-card" data-categories="housing">
+            <div class="command-header">
+                <div class="command-name">/house upgrade</div>
+                <span class="command-category">Housing</span>
+            </div>
+            <div class="command-description">Upgrade your house (requires 500 wood and 100 metal)</div>
+        </div>
+        
+        <!-- Vehicle Commands -->
+        <div class="command-card" data-categories="vehicle">
+            <div class="command-header">
+                <div class="command-name">/toggleboot</div>
+                <span class="command-category">Vehicle</span>
+            </div>
+            <div class="command-description">Toggle the vehicle's boot</div>
+        </div>
+        
+        <div class="command-card" data-categories="vehicle">
+            <div class="command-header">
+                <div class="command-name">/togglebonnet</div>
+                <span class="command-category">Vehicle</span>
+            </div>
+            <div class="command-description">Toggle the vehicle's bonnet</div>
+        </div>
+        
+        <div class="command-card" data-categories="vehicle">
+            <div class="command-header">
+                <div class="command-name">/togglelights</div>
+                <span class="command-category">Vehicle</span>
+            </div>
+            <div class="command-description">Toggle the vehicle's lights</div>
+        </div>
+        
+        <!-- Bomb Commands -->
+        <div class="command-card" data-categories="crafting">
+            <div class="command-header">
+                <div class="command-name">/makebomb</div>
+                <span class="command-category">Crafting</span>
+            </div>
+            <div class="command-description">Make a bomb with 5 chemicals</div>
+        </div>
+        
+        <div class="command-card" data-categories="crafting">
+            <div class="command-header">
+                <div class="command-name">/plantbomb</div>
+                <span class="command-category">Crafting</span>
+            </div>
+            <div class="command-description">Plant a bomb if you have one</div>
+        </div>
+        
+        <!-- Profile Commands -->
+        <div class="command-card" data-categories="misc">
+            <div class="command-header">
+                <div class="command-name">/profile</div>
+                <span class="command-category">Profile</span>
+            </div>
+            <div class="command-description">View your profile and stats</div>
+        </div>
+        
+        <div class="command-card" data-categories="misc">
+            <div class="command-header">
+                <div class="command-name">/inv</div>
+                <span class="command-category">Inventory</span>
+            </div>
+            <div class="command-description">Displays your inventory menu</div>
+        </div>
+        
+        <!-- Admin Commands -->
+        <div class="command-card" data-categories="misc">
+            <div class="command-header">
+                <div class="command-name">/admins</div>
+                <span class="command-category">Admin</span>
+            </div>
+            <div class="command-description">Shows online administrators</div>
+        </div>
+        
+        <div class="command-card" data-categories="misc">
+            <div class="command-header">
+                <div class="command-name">/report</div>
+                <span class="command-category">Admin</span>
+            </div>
+            <div class="command-description">Report an issue to administrators</div>
+        </div>
+    </div>
+    
+    <!-- QUICK TIPS -->
+    <div class="success-box" style="margin-top: 40px;">
+        <div class="success-title">💡 QUICK TIPS</div>
+        <div class="step">
+            <div class="step-number">🔍</div>
+            <span>Use the search bar above to quickly find specific commands</span>
+        </div>
+        <div class="step">
+            <div class="step-number">🏷️</div>
+            <span>Click on category buttons to filter commands by type</span>
+        </div>
+        <div class="step">
+            <div class="step-number">🔄</div>
+            <span>Commands with aliases can be used interchangeably (e.g., /shovel = /spade = /diggything)</span>
+        </div>
+        <div class="step">
+            <div class="step-number">ℹ️</div>
+            <span>Always check command requirements before using them (some need items or specific locations)</span>
+        </div>
+    </div>
+</section>
+
         
         <!-- WAREHOUSES SECTION - Existing with pictures -->
         <section id="warehouses" class="section">
@@ -2075,6 +2847,91 @@
                 }
             }
         });
+		
+// Commands Section Interactive Features
+document.addEventListener('DOMContentLoaded', function() {
+    // Only run if we're on the commands section or it exists
+    const commandsSection = document.getElementById('commands');
+    if (!commandsSection) return;
+    
+    const searchInput = document.getElementById('commandSearch');
+    const categoryButtons = document.querySelectorAll('.category-btn');
+    const commandCards = document.querySelectorAll('.command-card');
+    const commandCount = document.getElementById('commandCount');
+    
+    // Update command count
+    function updateCommandCount() {
+        const visibleCommands = document.querySelectorAll('.command-card:not(.hidden)').length;
+        commandCount.textContent = `${visibleCommands} commands`;
+        commandCount.style.animation = 'none';
+        setTimeout(() => {
+            commandCount.style.animation = 'pulse 2s infinite';
+        }, 10);
+    }
+    
+    // Filter commands by search
+    function filterCommands() {
+        const searchTerm = searchInput.value.toLowerCase();
+        const activeCategory = document.querySelector('.category-btn.active').dataset.category;
+        
+        commandCards.forEach(card => {
+            const commandText = card.querySelector('.command-name').textContent.toLowerCase();
+            const description = card.querySelector('.command-description').textContent.toLowerCase();
+            const categories = card.dataset.categories.split(' ');
+            
+            const matchesSearch = commandText.includes(searchTerm) || description.includes(searchTerm);
+            const matchesCategory = activeCategory === 'all' || categories.includes(activeCategory);
+            
+            if (matchesSearch && matchesCategory) {
+                card.classList.remove('hidden');
+                card.style.animation = 'slideIn 0.5s ease-out forwards';
+            } else {
+                card.classList.add('hidden');
+            }
+        });
+        
+        updateCommandCount();
+    }
+    
+    // Category filter
+    categoryButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            categoryButtons.forEach(btn => btn.classList.remove('active'));
+            this.classList.add('active');
+            filterCommands();
+            
+            // Animation for category change
+            this.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                this.style.transform = 'scale(1)';
+            }, 150);
+        });
+    });
+    
+    // Search input listener
+    searchInput.addEventListener('input', filterCommands);
+    
+    // Clear search on escape
+    searchInput.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            this.value = '';
+            filterCommands();
+        }
+    });
+    
+    // Hover effects for command cards
+    commandCards.forEach(card => {
+        card.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-5px)';
+        });
+        
+        card.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0)';
+        });
+        
+        // Click to copy command (optional feature)
+        card.addEventListener('click', function() {
+            const commandName = this.querySelector('.command-name').
     </script>
 </body>
 </html>
