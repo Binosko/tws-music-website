@@ -1417,7 +1417,15 @@
     
     <div class="info-box">
         <div class="info-title">📍 CRAFTING LOCATION</div>
-        <p><strong>Angel Pine Sawmill</strong> - Press <kbd>F</kbd> or <kbd>Enter Vehicle</kbd> button near the door, then find the green marker text.</p>
+        <div class="step">
+            <div class="step-number">🗺️</div>
+            <span><strong>Angel Pine Sawmill</strong> - Press <kbd>F</kbd> or <kbd>Enter Vehicle</kbd> button near the door, then find the green marker text.</span>
+        </div>
+        
+        <div class="image-container" style="margin: 15px 0;">
+            <img src="https://i.ibb.co/kgJS8x6y/map.png" alt="Angel Pine Sawmill Map Location" class="guide-image" onclick="openLightbox(this.src, 'Angel Pine Sawmill Location')">
+            <div class="image-caption">Angel Pine Sawmill Location on Map</div>
+        </div>
     </div>
     
     <!-- CRAFTING PROCESS -->
@@ -1435,9 +1443,79 @@
         <span><strong>Craft Weapon Box:</strong> Use <span class="command">/craftbox [weapon] [ammo]</span> at the sawmill</span>
     </div>
     
-    <!-- WEAPON BOXES -->
+    <!-- WEAPON ICONS GALLERY -->
     <h3 style="color: var(--samp-yellow); margin: 30px 0 15px 0; border-bottom: 2px solid var(--samp-yellow); padding-bottom: 8px;">
-        📦 WEAPON BOXES & COMMANDS
+        🎯 CRAFTABLE WEAPONS
+    </h3>
+    
+    <div class="weapon-icons-gallery" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; margin: 20px 0;">
+        <!-- Combat Shotgun -->
+        <div class="weapon-icon-item" style="background-color: var(--samp-dark); border-radius: 8px; padding: 15px; text-align: center; border: 1px solid var(--samp-border); transition: all 0.3s;">
+            <img src="https://i.ibb.co/23LYcGqw/combat-shotgun.png" alt="Combat Shotgun" style="width: 50px; height: 50px; margin-bottom: 10px;">
+            <div style="color: var(--samp-yellow); font-weight: bold; margin-bottom: 5px;">100 Combat Shotguns</div>
+            <div style="color: #aaa; font-size: 0.8rem;">Command: <code>/craftbox Combat Shotguns 100</code></div>
+        </div>
+        
+        <!-- Sniper -->
+        <div class="weapon-icon-item" style="background-color: var(--samp-dark); border-radius: 8px; padding: 15px; text-align: center; border: 1px solid var(--samp-border); transition: all 0.3s;">
+            <img src="https://i.ibb.co/s97Vc91R/Sniper-rifle.png" alt="Sniper Rifle" style="width: 50px; height: 50px; margin-bottom: 10px;">
+            <div style="color: var(--samp-yellow); font-weight: bold; margin-bottom: 5px;">25 Sniper Bullets</div>
+            <div style="color: #aaa; font-size: 0.8rem;">Command: <code>/craftbox Sniper 25</code></div>
+        </div>
+        
+        <!-- M4 -->
+        <div class="weapon-icon-item" style="background-color: var(--samp-dark); border-radius: 8px; padding: 15px; text-align: center; border: 1px solid var(--samp-border); transition: all 0.3s;">
+            <img src="https://i.ibb.co/zTxx8gWk/m4-e.png" alt="M4" style="width: 50px; height: 50px; margin-bottom: 10px;">
+            <div style="color: var(--samp-yellow); font-weight: bold; margin-bottom: 5px;">1000 M4 Bullets</div>
+            <div style="color: #aaa; font-size: 0.8rem;">Command: <code>/craftbox M4 1000</code></div>
+        </div>
+        
+        <!-- Silenced Pistol -->
+        <div class="weapon-icon-item" style="background-color: var(--samp-dark); border-radius: 8px; padding: 15px; text-align: center; border: 1px solid var(--samp-border); transition: all 0.3s;">
+            <img src="https://i.ibb.co/RGNHHG51/silencediconpng.png" alt="Silenced Pistol" style="width: 50px; height: 50px; margin-bottom: 10px;">
+            <div style="color: var(--samp-yellow); font-weight: bold; margin-bottom: 5px;">100 Silenced Pistols</div>
+            <div style="color: #aaa; font-size: 0.8rem;">Command: <code>/craftbox Silenced Pistol 100</code></div>
+        </div>
+        
+        <!-- 9mm -->
+        <div class="weapon-icon-item" style="background-color: var(--samp-dark); border-radius: 8px; padding: 15px; text-align: center; border: 1px solid var(--samp-border); transition: all 0.3s;">
+            <img src="https://i.ibb.co/3mTCnWzd/colt-9mmm.png" alt="9mm" style="width: 50px; height: 50px; margin-bottom: 10px;">
+            <div style="color: var(--samp-yellow); font-weight: bold; margin-bottom: 5px;">60 9mm Bullets</div>
+            <div style="color: #aaa; font-size: 0.8rem;">Command: <code>/craftbox 9mm 60</code></div>
+        </div>
+        
+        <!-- Smoke Grenades -->
+        <div class="weapon-icon-item" style="background-color: var(--samp-dark); border-radius: 8px; padding: 15px; text-align: center; border: 1px solid var(--samp-border); transition: all 0.3s;">
+            <img src="https://i.ibb.co/gL6bX6fL/tear-gass.png" alt="Smoke Grenades" style="width: 50px; height: 50px; margin-bottom: 10px;">
+            <div style="color: var(--samp-yellow); font-weight: bold; margin-bottom: 5px;">10 Smoke Grenades</div>
+            <div style="color: #aaa; font-size: 0.8rem;">Command: <code>/craftbox Smoke Grenades 10</code></div>
+        </div>
+        
+        <!-- Grenades 25 -->
+        <div class="weapon-icon-item" style="background-color: var(--samp-dark); border-radius: 8px; padding: 15px; text-align: center; border: 1px solid var(--samp-border); transition: all 0.3s;">
+            <img src="https://i.ibb.co/RGncqs3M/grenades.png" alt="Grenades" style="width: 50px; height: 50px; margin-bottom: 10px;">
+            <div style="color: var(--samp-yellow); font-weight: bold; margin-bottom: 5px;">25 Grenades</div>
+            <div style="color: #aaa; font-size: 0.8rem;">Command: <code>/craftbox Grenades 25</code></div>
+        </div>
+        
+        <!-- Grenades 50 -->
+        <div class="weapon-icon-item" style="background-color: var(--samp-dark); border-radius: 8px; padding: 15px; text-align: center; border: 1px solid var(--samp-border); transition: all 0.3s;">
+            <img src="https://i.ibb.co/RGncqs3M/grenades.png" alt="Grenades" style="width: 50px; height: 50px; margin-bottom: 10px;">
+            <div style="color: var(--samp-yellow); font-weight: bold; margin-bottom: 5px;">50 Grenades</div>
+            <div style="color: #aaa; font-size: 0.8rem;">Command: <code>/craftbox Grenades 50</code></div>
+        </div>
+        
+        <!-- Grenades 100 -->
+        <div class="weapon-icon-item" style="background-color: var(--samp-dark); border-radius: 8px; padding: 15px; text-align: center; border: 1px solid var(--samp-border); transition: all 0.3s;">
+            <img src="https://i.ibb.co/RGncqs3M/grenades.png" alt="Grenades" style="width: 50px; height: 50px; margin-bottom: 10px;">
+            <div style="color: var(--samp-yellow); font-weight: bold; margin-bottom: 5px;">100 Grenades</div>
+            <div style="color: #aaa; font-size: 0.8rem;">Command: <code>/craftbox Grenades 100</code></div>
+        </div>
+    </div>
+    
+    <!-- WEAPON BOXES TABLE -->
+    <h3 style="color: var(--samp-yellow); margin: 30px 0 15px 0; border-bottom: 2px solid var(--samp-yellow); padding-bottom: 8px;">
+        📦 WEAPON BOXES DETAILS
     </h3>
     
     <table class="system-table">
