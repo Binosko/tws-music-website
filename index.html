@@ -180,7 +180,6 @@
             border-bottom-color: var(--samp-teal);
         }
 
-/* Add these after the existing .section-foraging styles (~line 180) */
 
 .section-item-crafting {
     border-left-color: var(--samp-pink);
@@ -198,6 +197,15 @@
 .section-weapon-crafting .section-title {
     color: var(--samp-purple);
     border-bottom-color: var(--samp-purple);
+}
+
+.section-skins {
+    border-left-color: #E91E63;
+}
+
+.section-skins .section-title {
+    color: #E91E63;
+    border-bottom-color: #E91E63;
 }
         
         /* Command Box - Enhanced */
@@ -322,6 +330,22 @@
     border-color: var(--samp-purple);
     box-shadow: 0 5px 15px rgba(156, 39, 176, 0.3);
     cursor: pointer;
+}
+
+/* Skin Card Hover Effects */
+.skin-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+    border-color: #E91E63 !important;
+    cursor: pointer;
+}
+
+.skin-card img {
+    transition: transform 0.3s;
+}
+
+.skin-card:hover img {
+    transform: scale(1.05);
 }
         
         .item-name {
@@ -631,6 +655,7 @@
                     <li><a href="#foraging">🌿 Foraging</a></li>
                     <li><a href="#item-crafting">🧪 Item Crafting</a></li>
                     <li><a href="#weapon-crafting">🔫 Weapon Crafting</a></li>
+                    <li><a href="#skins">👕 Skins</a></li>
                     <li><a href="#warehouses">🏭 Warehouses</a></li>
                     <li><a href="#sidequests">📋 Side Quests</a></li>
                 </ul>
@@ -1613,6 +1638,159 @@
         <div class="step">
             <div class="step-number">📍</div>
             <span>Can only craft at <strong>Angel Pine Sawmill and Sherman Dam Sawmill</strong> location</span>
+        </div>
+    </div>
+</section>
+
+<!-- ================= -->
+<!-- SKINS SECTION -->
+<!-- ================= -->
+<section id="skins" class="section section-skins">
+    <h2 class="section-title">
+        <span class="section-icon">👕</span>
+        CUSTOM SKINS GUIDE <span class="section-counter">11</span>
+    </h2>
+    
+    <p>Stand out on the battlefield with unique character skins. Choose from faction skins, RP operators, or get your own custom skin!</p>
+    
+    <!-- FACTIONS SKINS -->
+    <h3 style="color: var(--samp-blue); margin: 30px 0 20px 0; border-bottom: 2px solid var(--samp-blue); padding-bottom: 8px;">
+        ⚔️ FACTION SKINS
+    </h3>
+    
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin: 20px 0;">
+        <!-- Blue Empire -->
+        <div style="background-color: rgba(33, 150, 243, 0.1); border: 2px solid var(--samp-blue); border-radius: 8px; padding: 20px;">
+            <h4 style="color: var(--samp-blue); text-align: center; margin-bottom: 15px; font-size: 1.3rem;">🔵 BLUE EMPIRE</h4>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                <!-- Skin 1 -->
+                <div class="skin-card" style="background-color: var(--samp-dark); border-radius: 6px; padding: 15px; text-align: center; border: 1px solid var(--samp-border); transition: all 0.3s;">
+                    <img src="https://i.ibb.co/5x90DVSX/sa-mp-017.png" alt="Blue Empire Skin 1" style="width: 100px; height: 150px; object-fit: cover; border-radius: 4px; margin-bottom: 10px; cursor: pointer;" onclick="openLightbox('https://i.ibb.co/5x90DVSX/sa-mp-017.png', 'Blue Empire - Skin 1')">
+                    <div style="color: var(--samp-text); font-weight: bold;">Skin 1</div>
+                    <div style="color: #aaa; font-size: 0.8rem;">Elite Soldier</div>
+                </div>
+                
+                <!-- Skin 2 -->
+                <div class="skin-card" style="background-color: var(--samp-dark); border-radius: 6px; padding: 15px; text-align: center; border: 1px solid var(--samp-border); transition: all 0.3s;">
+                    <img src="https://i.ibb.co/jZ3ZKn0Q/sa-mp-018.png" alt="Blue Empire Skin 2" style="width: 100px; height: 150px; object-fit: cover; border-radius: 4px; margin-bottom: 10px; cursor: pointer;" onclick="openLightbox('https://i.ibb.co/jZ3ZKn0Q/sa-mp-018.png', 'Blue Empire - Skin 2')">
+                    <div style="color: var(--samp-text); font-weight: bold;">Skin 2</div>
+                    <div style="color: #aaa; font-size: 0.8rem;">Special Forces</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Red Rebellion -->
+        <div style="background-color: rgba(244, 67, 54, 0.1); border: 2px solid var(--samp-red); border-radius: 8px; padding: 20px;">
+            <h4 style="color: var(--samp-red); text-align: center; margin-bottom: 15px; font-size: 1.3rem;">🔴 RED REBELLION</h4>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                <!-- Skin 1 -->
+                <div class="skin-card" style="background-color: var(--samp-dark); border-radius: 6px; padding: 15px; text-align: center; border: 1px solid var(--samp-border); transition: all 0.3s;">
+                    <img src="https://i.ibb.co/pvbCKS8q/sa-mp-014.png" alt="Red Rebellion Skin 1" style="width: 100px; height: 150px; object-fit: cover; border-radius: 4px; margin-bottom: 10px; cursor: pointer;" onclick="openLightbox('https://i.ibb.co/pvbCKS8q/sa-mp-014.png', 'Red Rebellion - Skin 1')">
+                    <div style="color: var(--samp-text); font-weight: bold;">Skin 1</div>
+                    <div style="color: #aaa; font-size: 0.8rem;">Rebel Fighter</div>
+                </div>
+                
+                <!-- Skin 2 -->
+                <div class="skin-card" style="background-color: var(--samp-dark); border-radius: 6px; padding: 15px; text-align: center; border: 1px solid var(--samp-border); transition: all 0.3s;">
+                    <img src="https://i.ibb.co/qMRV7SYZ/sa-mp-016.png" alt="Red Rebellion Skin 2" style="width: 100px; height: 150px; object-fit: cover; border-radius: 4px; margin-bottom: 10px; cursor: pointer;" onclick="openLightbox('https://i.ibb.co/qMRV7SYZ/sa-mp-016.png', 'Red Rebellion - Skin 2')">
+                    <div style="color: var(--samp-text); font-weight: bold;">Skin 2</div>
+                    <div style="color: #aaa; font-size: 0.8rem;">Guerrilla Warrior</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- RP OPERATORS -->
+    <h3 style="color: var(--samp-green); margin: 40px 0 20px 0; border-bottom: 2px solid var(--samp-green); padding-bottom: 8px;">
+        🎭 RP OPERATORS
+    </h3>
+    
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; max-width: 600px; margin: 0 auto;">
+        <!-- RP Operator 1 -->
+        <div class="skin-card" style="background-color: var(--samp-dark); border-radius: 8px; padding: 20px; text-align: center; border: 2px solid var(--samp-green); transition: all 0.3s;">
+            <h4 style="color: var(--samp-green); margin-bottom: 15px;">RP Operator Skin 1</h4>
+            <img src="https://i.ibb.co/YBmdm44X/sa-mp-012.png" alt="RP Operator Skin 1" style="width: 120px; height: 180px; object-fit: cover; border-radius: 6px; margin-bottom: 15px; cursor: pointer;" onclick="openLightbox('https://i.ibb.co/YBmdm44X/sa-mp-012.png', 'RP Operator - Skin 1')">
+            <div style="color: #aaa; font-size: 0.9rem;">Professional Roleplay Character</div>
+        </div>
+        
+        <!-- RP Operator 2 -->
+        <div class="skin-card" style="background-color: var(--samp-dark); border-radius: 8px; padding: 20px; text-align: center; border: 2px solid var(--samp-green); transition: all 0.3s;">
+            <h4 style="color: var(--samp-green); margin-bottom: 15px;">RP Operator Skin 2</h4>
+            <img src="https://i.ibb.co/B5yXKjnP/sa-mp-013.png" alt="RP Operator Skin 2" style="width: 120px; height: 180px; object-fit: cover; border-radius: 6px; margin-bottom: 15px; cursor: pointer;" onclick="openLightbox('https://i.ibb.co/B5yXKjnP/sa-mp-013.png', 'RP Operator - Skin 2')">
+            <div style="color: #aaa; font-size: 0.9rem;">Special Roleplay Character</div>
+        </div>
+    </div>
+    
+    <!-- CUSTOM SKIN -->
+    <div class="info-box" style="margin-top: 40px;">
+        <div class="info-title">⭐ CUSTOM SKIN</div>
+        <p>Some players enjoy the feeling of having a custom identity. Donate <strong>15 CAD</strong> to get a custom skin from the donation list.</p>
+        
+        <div class="step">
+            <div class="step-number">1</div>
+            <span>Check available skins in the <a href="https://discord.com/channels/403278222277607425/681428934642237452" target="_blank" style="color: var(--samp-cyan); text-decoration: none; border-bottom: 1px dashed var(--samp-cyan);">Donation Discord Channel ↗</a></span>
+        </div>
+        
+        <div class="step">
+            <div class="step-number">2</div>
+            <span>Find skin IDs in the <a href="https://sampwiki.blast.hk/wiki/Skins:All" target="_blank" style="color: var(--samp-cyan); text-decoration: none; border-bottom: 1px dashed var(--samp-cyan);">Complete SA:MP Skin List ↗</a></span>
+        </div>
+        
+        <div class="step">
+            <div class="step-number">3</div>
+            <span>Send a message to <strong>The Emperor</strong> with your preferred skin ID to check availability</span>
+        </div>
+    </div>
+    
+    <!-- FREE SKIN -->
+    <div class="success-box" style="margin-top: 30px;">
+        <div class="success-title">🎁 FREE SKIN REWARD</div>
+        <p>With good activity in the server and maintaining a positive personality and loyalty to the community, the server owner may reward you with a special custom skin as a gift for your dedication.</p>
+        
+        <div class="step">
+            <div class="step-number">📈</div>
+            <span><strong>Active Participation:</strong> Regular gameplay and server involvement</span>
+        </div>
+        
+        <div class="step">
+            <div class="step-number">🤝</div>
+            <span><strong>Positive Community Role:</strong> Helpful attitude and good sportsmanship</span>
+        </div>
+        
+        <div class="step">
+            <div class="step-number">📢</div>
+            <span><strong>Community Support:</strong> Advertising and promoting the server</span>
+        </div>
+        
+        <div class="step">
+            <div class="step-number">👑</div>
+            <span><strong>Owner's Discretion:</strong> Special skins are gifted by the server owner</span>
+        </div>
+    </div>
+    
+    <!-- IMPORTANT NOTES -->
+    <div class="warning-box" style="margin-top: 30px;">
+        <div class="warning-title">⚠️ IMPORTANT NOTES</div>
+        <div class="step">
+            <div class="step-number">🔒</div>
+            <span>Custom skins are <strong>permanent</strong> and unique to your character</span>
+        </div>
+        
+        <div class="step">
+            <div class="step-number">💳</div>
+            <span>Paid custom skins require <strong>15 CAD donation</strong> to the server</span>
+        </div>
+        
+        <div class="step">
+            <div class="step-number">🎮</div>
+            <span>Free skins are <strong>reward-based</strong> for loyal community members</span>
+        </div>
+        
+        <div class="step">
+            <div class="step-number">📋</div>
+            <span>Always check skin availability with The Emperor before donating</span>
         </div>
     </div>
 </section>
