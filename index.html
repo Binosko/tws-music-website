@@ -803,7 +803,7 @@
 .settings-button {
     position: fixed;
     top: 20px;
-    left: 20px;
+    right: 20px; /* ← CHANGED THIS LINE TO: right: 20px; */
     width: 50px;
     height: 50px;
     background-color: var(--samp-orange);
@@ -812,7 +812,7 @@
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    z-index: 1000;
+    z-index: 2000; /* ← CHANGED THIS LINE TO: z-index: 2000; */
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
     transition: all 0.3s ease;
     font-size: 1.5rem;
@@ -827,13 +827,13 @@
 .settings-panel {
     position: fixed;
     top: 80px;
-    left: 20px;
+    right: 20px; /* ← CHANGED THIS LINE TO: right: 20px; */
     background-color: var(--samp-dark);
     border: 1px solid var(--samp-border);
     border-radius: 10px;
     padding: 20px;
     width: 300px;
-    z-index: 999;
+    z-index: 1999; /* ← CHANGED THIS LINE TO: z-index: 1999; */
     display: none;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
     animation: slideDown 0.3s ease;
