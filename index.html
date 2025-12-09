@@ -18,6 +18,7 @@
             --samp-cyan: #00BCD4;
             --samp-pink: #E91E63;
             --samp-teal: #009688;
+			--header-accent: #1a3c1a;
             --samp-text: #e0e0e0;
             --samp-border: #333;
             --samp-card: #1e1e1e;
@@ -38,16 +39,15 @@
             overflow-x: hidden;
         }
         
-        /* Header & Navigation - Updated */
-        header {
-            background: linear-gradient(to right, var(--samp-dark), #1a3c1a);
-            padding: 1rem 2rem;
-            border-bottom: 3px solid var(--samp-green);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
-        }
+header {
+    background: linear-gradient(to right, var(--samp-dark), var(--header-accent));
+    padding: 1rem 2rem;
+    border-bottom: 3px solid var(--samp-green);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+}
         
         .header-container {
             max-width: 1200px;
@@ -3310,7 +3310,7 @@ function initCommandsSection() {
 	
 }
 
-// Theme Switcher Functionality
+// Theme Switcher Functionality - FIXED VERSION
 document.addEventListener('DOMContentLoaded', function() {
     const settingsButton = document.getElementById('settingsButton');
     const settingsPanel = document.getElementById('settingsPanel');
@@ -3320,7 +3320,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const resetBtn = document.getElementById('resetTheme');
     const themePresets = document.querySelectorAll('.theme-preset');
     
-    // Store ORIGINAL colors when page first loads (before any theme changes)
+    // Store ORIGINAL colors when page first loads
     const ORIGINAL_COLORS = {
         '--samp-green': getComputedStyle(document.documentElement).getPropertyValue('--samp-green').trim(),
         '--samp-dark': getComputedStyle(document.documentElement).getPropertyValue('--samp-dark').trim(),
@@ -3331,7 +3331,8 @@ document.addEventListener('DOMContentLoaded', function() {
         '--samp-purple': getComputedStyle(document.documentElement).getPropertyValue('--samp-purple').trim(),
         '--samp-cyan': getComputedStyle(document.documentElement).getPropertyValue('--samp-cyan').trim(),
         '--samp-pink': getComputedStyle(document.documentElement).getPropertyValue('--samp-pink').trim(),
-        '--samp-teal': getComputedStyle(document.documentElement).getPropertyValue('--samp-teal').trim()
+        '--samp-teal': getComputedStyle(document.documentElement).getPropertyValue('--samp-teal').trim(),
+        '--header-accent': '#1a3c1a'
     };
     
     // Load saved theme from localStorage
@@ -3351,11 +3352,14 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Apply theme color to website
     function applyThemeColor(color) {
+        // Add a header accent color (darker version of the theme color)
+        const headerAccentColor = darkenColor(color, 35);
+        document.documentElement.style.setProperty('--header-accent', headerAccentColor);
+        
         // Set the main green color
         document.documentElement.style.setProperty('--samp-green', color);
         
-        // Keep all other colors as they were originally (from ORIGINAL_COLORS)
-        // This ensures only the green theme changes
+        // Keep all other colors as they were originally
         document.documentElement.style.setProperty('--samp-blue', ORIGINAL_COLORS['--samp-blue']);
         document.documentElement.style.setProperty('--samp-red', ORIGINAL_COLORS['--samp-red']);
         document.documentElement.style.setProperty('--samp-yellow', ORIGINAL_COLORS['--samp-yellow']);
@@ -3364,7 +3368,7 @@ document.addEventListener('DOMContentLoaded', function() {
         document.documentElement.style.setProperty('--samp-pink', ORIGINAL_COLORS['--samp-pink']);
         document.documentElement.style.setProperty('--samp-teal', ORIGINAL_COLORS['--samp-teal']);
         
-        // Create a slightly adjusted dark and orange based on the new color
+        // Create adjusted dark and orange based on the new color
         const darkerColor = darkenColor(color, 20);
         const lighterColor = lightenColor(color, 20);
         
@@ -3375,7 +3379,7 @@ document.addEventListener('DOMContentLoaded', function() {
         updateSections(color);
     }
     
-    // RESTORE ORIGINAL THEME (not just green)
+    // Restore original theme function - WAS MISSING
     function restoreOriginalTheme() {
         // Restore ALL original colors exactly as they were
         Object.keys(ORIGINAL_COLORS).forEach(colorVar => {
@@ -3492,149 +3496,6 @@ document.addEventListener('DOMContentLoaded', function() {
     // Reset to original theme button
     resetBtn.addEventListener('click', function() {
         restoreOriginalTheme();
-        settingsPanel.classList.remove('show');
-    });
-    
-    // Theme preset buttons
-    themePresets.forEach(preset => {
-        preset.addEventListener('click', function() {
-            const color = this.dataset.color;
-            colorPicker.value = color;
-            colorCircle.style.background = color;
-            updateActivePreset(color);
-        });
-    });
-    
-    // Load theme on page load
-    loadTheme();
-});
-
-    // Load saved theme from localStorage
-    function loadTheme() {
-        const savedColor = localStorage.getItem('websiteTheme');
-        if (savedColor) {
-            applyThemeColor(savedColor);
-            colorPicker.value = savedColor;
-            colorCircle.style.background = savedColor;
-            updateActivePreset(savedColor);
-        }
-    }
-    
-    // Apply theme color to website
-    function applyThemeColor(color) {
-        document.documentElement.style.setProperty('--samp-green', color);
-        
-        // Create a darker and lighter version of the color
-        const darkerColor = darkenColor(color, 20);
-        const lighterColor = lightenColor(color, 20);
-        
-        document.documentElement.style.setProperty('--samp-dark', darkerColor);
-        document.documentElement.style.setProperty('--samp-orange', lighterColor);
-        
-        // Update sections that use the green color
-        updateSections(color);
-    }
-    
-    // Update section borders and titles
-    function updateSections(color) {
-        const sections = document.querySelectorAll('.section');
-        sections.forEach(section => {
-            if (!section.classList.contains('section-commands') && 
-                !section.classList.contains('section-settings')) {
-                section.style.borderLeftColor = color;
-                const title = section.querySelector('.section-title');
-                if (title) {
-                    title.style.color = color;
-                    title.style.borderBottomColor = color;
-                }
-            }
-        });
-    }
-    
-    // Helper function to darken a color
-    function darkenColor(color, percent) {
-        const num = parseInt(color.replace('#', ''), 16);
-        const amt = Math.round(2.55 * percent);
-        const R = (num >> 16) - amt;
-        const G = (num >> 8 & 0x00FF) - amt;
-        const B = (num & 0x0000FF) - amt;
-        
-        return '#' + (
-            0x1000000 +
-            (R < 255 ? R < 1 ? 0 : R : 255) * 0x10000 +
-            (G < 255 ? G < 1 ? 0 : G : 255) * 0x100 +
-            (B < 255 ? B < 1 ? 0 : B : 255)
-        ).toString(16).slice(1);
-    }
-    
-    // Helper function to lighten a color
-    function lightenColor(color, percent) {
-        const num = parseInt(color.replace('#', ''), 16);
-        const amt = Math.round(2.55 * percent);
-        const R = (num >> 16) + amt;
-        const G = (num >> 8 & 0x00FF) + amt;
-        const B = (num & 0x0000FF) + amt;
-        
-        return '#' + (
-            0x1000000 +
-            (R > 255 ? 255 : R) * 0x10000 +
-            (G > 255 ? 255 : G) * 0x100 +
-            (B > 255 ? 255 : B)
-        ).toString(16).slice(1);
-    }
-    
-    // Update active preset
-    function updateActivePreset(color) {
-        themePresets.forEach(preset => {
-            if (preset.dataset.color === color) {
-                preset.classList.add('active');
-            } else {
-                preset.classList.remove('active');
-            }
-        });
-    }
-    
-    // Toggle settings panel
-    settingsButton.addEventListener('click', function(e) {
-        e.stopPropagation();
-        settingsPanel.classList.toggle('show');
-    });
-    
-    // Close panel when clicking outside
-    document.addEventListener('click', function(e) {
-        if (!settingsPanel.contains(e.target) && !settingsButton.contains(e.target)) {
-            settingsPanel.classList.remove('show');
-        }
-    });
-    
-    // Color picker interaction
-    colorPicker.addEventListener('input', function() {
-        const color = this.value;
-        colorCircle.style.background = color;
-        updateActivePreset(color);
-    });
-    
-    // Click on color circle to open picker
-    colorCircle.addEventListener('click', function() {
-        colorPicker.click();
-    });
-    
-    // Apply theme button
-    applyBtn.addEventListener('click', function() {
-        const color = colorPicker.value;
-        applyThemeColor(color);
-        localStorage.setItem('websiteTheme', color);
-        updateActivePreset(color);
-        settingsPanel.classList.remove('show');
-    });
-    
-    // Reset to default button
-    resetBtn.addEventListener('click', function() {
-        applyThemeColor(DEFAULT_COLOR);
-        colorPicker.value = DEFAULT_COLOR;
-        colorCircle.style.background = DEFAULT_COLOR;
-        localStorage.setItem('websiteTheme', DEFAULT_COLOR);
-        updateActivePreset(DEFAULT_COLOR);
         settingsPanel.classList.remove('show');
     });
     
