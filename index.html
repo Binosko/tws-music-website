@@ -961,6 +961,69 @@
     transform: translateY(-2px);
 }
 		
+/* ==================== */
+/* FOOTER BUTTON STYLING */
+/* ==================== */
+.footer-button-container {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+.footer-button {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    padding: 12px 24px;
+    background-color: var(--samp-dark);
+    border: 2px solid var(--samp-border);
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 1.2rem;
+    transition: all 0.3s;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.footer-button:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+    border-color: var(--samp-green);
+    background-color: rgba(30, 30, 30, 0.9);
+}
+
+.footer-button-word {
+    text-shadow: 2px 2px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+    font-weight: bold;
+}
+
+.visit-word {
+    color: white;
+}
+
+.that-word {
+    color: var(--samp-blue);
+}
+
+.war-word {
+    color: var(--samp-yellow);
+}
+
+.server-word {
+    color: var(--samp-red);
+}
+
+/* Arrow icon for button */
+.button-arrow {
+    margin-left: 10px;
+    font-size: 1.3rem;
+    transition: transform 0.3s;
+}
+
+.footer-button:hover .button-arrow {
+    transform: translateX(5px);
+}
+		
     </style>
 </head>
 <body>
@@ -2917,12 +2980,24 @@
     </div>
     
     <!-- Footer -->
-    <footer>
-        <div class="footer-text">
-            <p>TWS Server Guide | 🐔 Made by: Binosko & Nefar | ❤️ Collaboration: Rorale, Gofi, Karter, Ama, Kim, Caesar</p>
-            <p style="margin-top: 10px; font-size: 0.8rem; color: #666;">https://thatwarserver.com/forum/</p>
+<footer>
+    <div class="footer-text">
+        <p>TWS Server Guide | 🐔 Made by: Binosko & Nefar | ❤️ Collaboration: Rorale, Gofi, Karter, Ama, Kim, Caesar</p>
+        
+        <!-- New Visit Button -->
+        <div class="footer-button-container">
+            <a href="https://thatwarserver.com/forum/" target="_blank" class="footer-button">
+                <span class="footer-button-word visit-word">Visit</span>
+                <span class="footer-button-word that-word">That</span>
+                <span class="footer-button-word war-word">War</span>
+                <span class="footer-button-word server-word">Server</span>
+                <span class="button-arrow">→</span>
+            </a>
         </div>
-    </footer>
+        
+        <p style="margin-top: 15px; font-size: 0.8rem; color: #666;">https://thatwarserver.com/forum/</p>
+    </div>
+</footer>
 
     <script>
         // Lightbox functionality
