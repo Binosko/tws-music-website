@@ -179,6 +179,26 @@
             color: var(--samp-teal);
             border-bottom-color: var(--samp-teal);
         }
+
+/* Add these after the existing .section-foraging styles (~line 180) */
+
+.section-item-crafting {
+    border-left-color: var(--samp-pink);
+}
+
+.section-item-crafting .section-title {
+    color: var(--samp-pink);
+    border-bottom-color: var(--samp-pink);
+}
+
+.section-weapon-crafting {
+    border-left-color: var(--samp-purple);
+}
+
+.section-weapon-crafting .section-title {
+    color: var(--samp-purple);
+    border-bottom-color: var(--samp-purple);
+}
         
         /* Command Box - Enhanced */
         .command-box {
@@ -601,6 +621,8 @@
                     <li><a href="#housing">🏠 Housing</a></li>
                     <li><a href="#market">🏪 Market</a></li>
                     <li><a href="#foraging">🌿 Foraging</a></li>
+                    <li><a href="#item-crafting">🧪 Item Crafting</a></li>
+                    <li><a href="#weapon-crafting">🔫 Weapon Crafting</a></li>
                     <li><a href="#warehouses">🏭 Warehouses</a></li>
                     <li><a href="#sidequests">📋 Side Quests</a></li>
                 </ul>
@@ -1221,6 +1243,303 @@
                 </div>
             </div>
         </section>
+
+<!-- ==================== -->
+<!-- ITEM CRAFTING SECTION -->
+<!-- ==================== -->
+<section id="item-crafting" class="section section-item-crafting">
+    <h2 class="section-title">
+        <span class="section-icon">🧪</span>
+        ITEM CRAFTING GUIDE <span class="section-counter">9</span>
+    </h2>
+    
+    <p>Learn how to craft powerful poisons, explosives, flares, and food items from collected resources.</p>
+    
+    <!-- POISONS SECTION -->
+    <h3 style="color: var(--samp-red); margin: 30px 0 15px 0; border-bottom: 2px solid var(--samp-red); padding-bottom: 8px;">
+        ☠️ POISONS & ANTIDOTES
+    </h3>
+    
+    <div class="warning-box">
+        <div class="warning-title">⚠️ HANDLE WITH CARE</div>
+        <p>Poisons can be deadly. Always craft antidotes when working with toxic materials.</p>
+    </div>
+    
+    <div class="items-grid">
+        <!-- Rare Desert Poison Cure -->
+        <div class="item-card">
+            <div class="item-name">Rare Desert Poison Cure</div>
+            <div class="item-quantity">Mix: Rare Desert Poison + Edible Plant</div>
+        </div>
+        
+        <!-- Desert Poison Cure -->
+        <div class="item-card">
+            <div class="item-name">Desert Poison Cure</div>
+            <div class="item-quantity">Mix: Desert Poison + Edible Plant</div>
+        </div>
+        
+        <!-- Rare Mountain Poison Cure -->
+        <div class="item-card">
+            <div class="item-name">Rare Mountain Poison Cure</div>
+            <div class="item-quantity">Mix: Rare Mountain Poison + Edible Plant</div>
+        </div>
+        
+        <!-- Mountain Poison Cure -->
+        <div class="item-card">
+            <div class="item-name">Mountain Poison Cure</div>
+            <div class="item-quantity">Mix: Mountain Poison + Edible Plant</div>
+        </div>
+        
+        <!-- Rare Forest Poison Cure -->
+        <div class="item-card">
+            <div class="item-name">Rare Forest Poison Cure</div>
+            <div class="item-quantity">Mix: Rare Forest Poison + Edible Plant</div>
+        </div>
+        
+        <!-- Forest Poison Cure -->
+        <div class="item-card">
+            <div class="item-name">Forest Poison Cure</div>
+            <div class="item-quantity">Mix: Forest Poison + Edible Plant</div>
+        </div>
+    </div>
+    
+    <!-- SUPER POISON -->
+    <div class="warning-box" style="background-color: rgba(244, 67, 54, 0.2);">
+        <div class="warning-title">☢️ SUPER POISON</div>
+        <p>The rarest poison in the server. Instantly kills targets upon use.</p>
+        
+        <div class="step">
+            <div class="step-number">1</div>
+            <span>Mix <strong>Rare Forest Poison</strong> + <strong>Rare Mountain Poison</strong> = <em>Unknown Mixture</em></span>
+        </div>
+        <div class="step">
+            <div class="step-number">2</div>
+            <span>Mix <strong>Unknown Mixture</strong> + <strong>Rare Desert Poison</strong> = <strong>SUPER POISON</strong></span>
+        </div>
+    </div>
+    
+    <!-- FERTILISER -->
+    <h3 style="color: var(--samp-green); margin: 30px 0 15px 0; border-bottom: 2px solid var(--samp-green); padding-bottom: 8px;">
+        🌱 FERTILISER (Weed Growth)
+    </h3>
+    
+    <p>Essential for growing hemp seeds and preventing them from dying.</p>
+    
+    <div class="step">
+        <div class="step-number">1</div>
+        <span>Chemical + Edible Plant = <strong>Green Mush</strong></span>
+    </div>
+    <div class="step">
+        <div class="step-number">2</div>
+        <span>Green Mush + Edible Plant = <strong>Greener Mush</strong></span>
+    </div>
+    <div class="step">
+        <div class="step-number">3</div>
+        <span>Greener Mush + Seaweed = <strong>FERTILISER</strong></span>
+    </div>
+    
+    <!-- EXPLOSIVES -->
+    <h3 style="color: var(--samp-orange); margin: 30px 0 15px 0; border-bottom: 2px solid var(--samp-orange); padding-bottom: 8px;">
+        💥 EXPLOSIVES
+    </h3>
+    
+    <div class="command-box">
+        <div class="command">/makebomb</div>
+        <div class="command-desc">Craft bombs (requires 5 Chemicals)</div>
+    </div>
+    
+    <div class="items-grid">
+        <div class="item-card">
+            <div class="item-name">Rocket Engine</div>
+            <div class="item-quantity">Mix: Chemical + Metal</div>
+        </div>
+        <div class="item-card">
+            <div class="item-name">Missile</div>
+            <div class="item-quantity">Mix: Rocket Engine + Chemical</div>
+        </div>
+    </div>
+    
+    <!-- FLARES -->
+    <h3 style="color: var(--samp-red); margin: 30px 0 15px 0; border-bottom: 2px solid var(--samp-red); padding-bottom: 8px;">
+        🚨 FLARES
+    </h3>
+    
+    <div class="items-grid">
+        <div class="item-card">
+            <div class="item-name">Signal Flare</div>
+            <div class="item-quantity">Mix: Chemical + Forest Poison</div>
+            <div style="color: #aaa; font-size: 0.8rem; margin-top: 5px;">Used in Roleplays/Events</div>
+        </div>
+        
+        <div class="item-card">
+            <div class="item-name">Bomber Target Flare</div>
+            <div class="item-quantity">Mix: Chemical + Mountain Poison</div>
+            <div style="color: #aaa; font-size: 0.8rem; margin-top: 5px;">Target marker for bombers</div>
+        </div>
+        
+        <div class="item-card">
+            <div class="item-name">Distress Flare</div>
+            <div class="item-quantity">Mix: Chemical + Desert Poison</div>
+            <div style="color: #aaa; font-size: 0.8rem; margin-top: 5px;">Emergency signaling</div>
+        </div>
+    </div>
+    
+    <!-- FOOD -->
+    <h3 style="color: var(--samp-teal); margin: 30px 0 15px 0; border-bottom: 2px solid var(--samp-teal); padding-bottom: 8px;">
+        🍔 FOOD ITEMS
+    </h3>
+    
+    <div class="items-grid">
+        <div class="item-card">
+            <div class="item-name">Narcotic Salad</div>
+            <div class="item-quantity">Mix: 1g Weed + Edible Plant</div>
+            <div style="color: var(--samp-green); font-size: 0.8rem; margin-top: 5px;">+15 HP</div>
+        </div>
+        
+        <div class="item-card">
+            <div class="item-name">Pumpkin Pie w/ Cream</div>
+            <div class="item-quantity">Mix: Cup of Whipped Cream + Slice of Pumpkin Pie</div>
+            <div style="color: var(--samp-green); font-size: 0.8rem; margin-top: 5px;">+100 HP (Halloween Event)</div>
+        </div>
+    </div>
+</section>
+
+<!-- ======================= -->
+<!-- WEAPON CRAFTING SECTION -->
+<!-- ======================= -->
+<section id="weapon-crafting" class="section section-weapon-crafting">
+    <h2 class="section-title">
+        <span class="section-icon">🔫</span>
+        WEAPON CRAFTING GUIDE <span class="section-counter">10</span>
+    </h2>
+    
+    <p>Craft powerful weapons and ammunition at the Angel Pine Sawmill. Requires empty boxes made from wood.</p>
+    
+    <div class="info-box">
+        <div class="info-title">📍 CRAFTING LOCATION</div>
+        <p><strong>Angel Pine Sawmill</strong> - Press <kbd>F</kbd> or <kbd>Enter Vehicle</kbd> button near the door, then find the green marker text.</p>
+    </div>
+    
+    <!-- CRAFTING PROCESS -->
+    <h3 style="color: var(--samp-purple); margin: 30px 0 15px 0; border-bottom: 2px solid var(--samp-purple); padding-bottom: 8px;">
+        ⚙️ CRAFTING PROCESS
+    </h3>
+    
+    <div class="step">
+        <div class="step-number">1</div>
+        <span><strong>Create Empty Box:</strong> Use <span class="command">/makebox</span> (requires 10 wood per box)</span>
+    </div>
+    
+    <div class="step">
+        <div class="step-number">2</div>
+        <span><strong>Craft Weapon Box:</strong> Use <span class="command">/craftbox [weapon] [ammo]</span> at the sawmill</span>
+    </div>
+    
+    <!-- WEAPON BOXES -->
+    <h3 style="color: var(--samp-yellow); margin: 30px 0 15px 0; border-bottom: 2px solid var(--samp-yellow); padding-bottom: 8px;">
+        📦 WEAPON BOXES & COMMANDS
+    </h3>
+    
+    <table class="system-table">
+        <thead>
+            <tr>
+                <th>Weapon</th>
+                <th>Command</th>
+                <th>Metal Required</th>
+                <th>Price</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>100 Combat Shotguns</strong></td>
+                <td><code>/craftbox Combat Shotguns 100</code></td>
+                <td>30</td>
+                <td>$300</td>
+            </tr>
+            <tr>
+                <td><strong>25 Sniper Bullets</strong></td>
+                <td><code>/craftbox Sniper 25</code></td>
+                <td>30</td>
+                <td>$300</td>
+            </tr>
+            <tr>
+                <td><strong>1000 M4 Bullets</strong></td>
+                <td><code>/craftbox M4 1000</code></td>
+                <td>25</td>
+                <td>$250</td>
+            </tr>
+            <tr>
+                <td><strong>100 Silenced Pistols</strong></td>
+                <td><code>/craftbox Silenced Pistol 100</code></td>
+                <td>30</td>
+                <td>$300</td>
+            </tr>
+            <tr>
+                <td><strong>60 9mm Bullets</strong></td>
+                <td><code>/craftbox 9mm 60</code></td>
+                <td>15</td>
+                <td>$150</td>
+            </tr>
+            <tr>
+                <td><strong>10 Smoke Grenades</strong></td>
+                <td><code>/craftbox Smoke Grenades 10</code></td>
+                <td>5</td>
+                <td>$50</td>
+            </tr>
+            <tr>
+                <td><strong>25 Grenades</strong></td>
+                <td><code>/craftbox Grenades 25</code></td>
+                <td>13</td>
+                <td>$130</td>
+            </tr>
+            <tr>
+                <td><strong>50 Grenades</strong></td>
+                <td><code>/craftbox Grenades 50</code></td>
+                <td>25</td>
+                <td>$250</td>
+            </tr>
+            <tr>
+                <td><strong>100 Grenades</strong></td>
+                <td><code>/craftbox Grenades 100</code></td>
+                <td>50</td>
+                <td>$500</td>
+            </tr>
+        </tbody>
+    </table>
+    
+    <!-- MATERIALS & COSTS -->
+    <div class="success-box">
+        <div class="success-title">💰 COST BREAKDOWN</div>
+        <div class="step">
+            <div class="step-number">🪵</div>
+            <span><strong>Empty Box:</strong> 10 Wood (using <span class="command">/makebox</span>)</span>
+        </div>
+        <div class="step">
+            <div class="step-number">⚙️</div>
+            <span><strong>Weapon Box:</strong> Metal + Money (see table above)</span>
+        </div>
+        <div class="step">
+            <div class="step-number">🏭</div>
+            <span><strong>Location:</strong> Must be at Angel Pine Sawmill green marker</span>
+        </div>
+    </div>
+    
+    <div class="warning-box">
+        <div class="warning-title">⚠️ IMPORTANT NOTES</div>
+        <div class="step">
+            <div class="step-number">📦</div>
+            <span>You must have an <strong>empty box</strong> before using <span class="command">/craftbox</span></span>
+        </div>
+        <div class="step">
+            <div class="step-number">💰</div>
+            <span>Cost includes both <strong>metal requirements</strong> and <strong>money payment</strong></span>
+        </div>
+        <div class="step">
+            <div class="step-number">📍</div>
+            <span>Can only craft at <strong>Angel Pine Sawmill</strong> location</span>
+        </div>
+    </div>
+</section>
         
         <!-- WAREHOUSES SECTION - Existing with pictures -->
         <section id="warehouses" class="section">
