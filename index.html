@@ -796,9 +796,204 @@
             70% { transform: scale(1.2); }
             100% { transform: scale(1); }
         }
+		
+/* ==================== */
+/* FLOATING SETTINGS BUTTON */
+/* ==================== */
+.settings-button {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    width: 50px;
+    height: 50px;
+    background-color: var(--samp-orange);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 1000;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+    font-size: 1.5rem;
+}
+
+.settings-button:hover {
+    transform: scale(1.1) rotate(30deg);
+    background-color: #ff8c00;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+}
+
+.settings-panel {
+    position: fixed;
+    top: 80px;
+    left: 20px;
+    background-color: var(--samp-dark);
+    border: 1px solid var(--samp-border);
+    border-radius: 10px;
+    padding: 20px;
+    width: 300px;
+    z-index: 999;
+    display: none;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.settings-panel.show {
+    display: block;
+}
+
+.settings-title {
+    color: var(--samp-yellow);
+    font-size: 1.2rem;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+/* Color Picker */
+.color-picker-container {
+    margin: 20px 0;
+    text-align: center;
+}
+
+.color-picker-label {
+    display: block;
+    color: var(--samp-text);
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+.color-picker-circle {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: 3px solid white;
+    margin: 0 auto;
+    cursor: pointer;
+    background: conic-gradient(
+        red, yellow, lime, aqua, blue, magenta, red
+    );
+    transition: transform 0.3s;
+}
+
+.color-picker-circle:hover {
+    transform: scale(1.1);
+}
+
+.color-picker-input {
+    width: 100%;
+    height: 40px;
+    margin-top: 15px;
+    padding: 5px;
+    border: 2px solid var(--samp-border);
+    border-radius: 5px;
+    background: var(--samp-dark);
+    color: var(--samp-text);
+}
+
+/* Theme Presets */
+.theme-presets {
+    display: flex;
+    gap: 10px;
+    margin: 15px 0;
+    justify-content: center;
+}
+
+.theme-preset {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: 2px solid transparent;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.theme-preset:hover {
+    transform: scale(1.2);
+    border-color: white;
+}
+
+.theme-preset.active {
+    border-color: white;
+    box-shadow: 0 0 0 2px var(--samp-dark), 0 0 0 4px white;
+}
+
+/* Settings Actions */
+.settings-actions {
+    margin-top: 20px;
+    display: flex;
+    gap: 10px;
+}
+
+.settings-btn {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.2s;
+}
+
+.settings-btn.apply {
+    background-color: var(--samp-green);
+    color: white;
+}
+
+.settings-btn.reset {
+    background-color: var(--samp-orange);
+    color: white;
+}
+
+.settings-btn:hover {
+    opacity: 0.9;
+    transform: translateY(-2px);
+}
+		
     </style>
 </head>
 <body>
+
+<!-- Floating Settings Button -->
+<div class="settings-button" id="settingsButton">
+    ⚙️
+</div>
+
+<!-- Settings Panel -->
+<div class="settings-panel" id="settingsPanel">
+    <div class="settings-title">Website Theme</div>
+    
+    <div class="color-picker-container">
+        <label class="color-picker-label">Main Color:</label>
+        <div class="color-picker-circle" id="colorCircle"></div>
+        <input type="color" id="colorPicker" class="color-picker-input" value="#4CAF50">
+    </div>
+    
+    <div class="theme-presets">
+        <div class="theme-preset" style="background-color: #4CAF50;" data-color="#4CAF50"></div>
+        <div class="theme-preset" style="background-color: #2196F3;" data-color="#2196F3"></div>
+        <div class="theme-preset" style="background-color: #9C27B0;" data-color="#9C27B0"></div>
+        <div class="theme-preset" style="background-color: #FF5722;" data-color="#FF5722"></div>
+        <div class="theme-preset" style="background-color: #00BCD4;" data-color="#00BCD4"></div>
+    </div>
+    
+    <div class="settings-actions">
+        <button class="settings-btn apply" id="applyTheme">Apply Theme</button>
+        <button class="settings-btn reset" id="resetTheme">Reset to Default</button>
+    </div>
+</div>
+
     <!-- Header with updated navigation -->
     <header>
         <div class="header-container">
@@ -3040,6 +3235,162 @@ function initCommandsSection() {
             }
         }
     });
+	
+// Theme Switcher Functionality
+document.addEventListener('DOMContentLoaded', function() {
+    const settingsButton = document.getElementById('settingsButton');
+    const settingsPanel = document.getElementById('settingsPanel');
+    const colorPicker = document.getElementById('colorPicker');
+    const colorCircle = document.getElementById('colorCircle');
+    const applyBtn = document.getElementById('applyTheme');
+    const resetBtn = document.getElementById('resetTheme');
+    const themePresets = document.querySelectorAll('.theme-preset');
+    
+    const DEFAULT_COLOR = '#4CAF50'; // Default green color
+    
+    // Load saved theme from localStorage
+    function loadTheme() {
+        const savedColor = localStorage.getItem('websiteTheme');
+        if (savedColor) {
+            applyThemeColor(savedColor);
+            colorPicker.value = savedColor;
+            colorCircle.style.background = savedColor;
+            updateActivePreset(savedColor);
+        }
+    }
+    
+    // Apply theme color to website
+    function applyThemeColor(color) {
+        document.documentElement.style.setProperty('--samp-green', color);
+        
+        // Create a darker and lighter version of the color
+        const darkerColor = darkenColor(color, 20);
+        const lighterColor = lightenColor(color, 20);
+        
+        document.documentElement.style.setProperty('--samp-dark', darkerColor);
+        document.documentElement.style.setProperty('--samp-orange', lighterColor);
+        
+        // Update sections that use the green color
+        updateSections(color);
+    }
+    
+    // Update section borders and titles
+    function updateSections(color) {
+        const sections = document.querySelectorAll('.section');
+        sections.forEach(section => {
+            if (!section.classList.contains('section-commands') && 
+                !section.classList.contains('section-settings')) {
+                section.style.borderLeftColor = color;
+                const title = section.querySelector('.section-title');
+                if (title) {
+                    title.style.color = color;
+                    title.style.borderBottomColor = color;
+                }
+            }
+        });
+    }
+    
+    // Helper function to darken a color
+    function darkenColor(color, percent) {
+        const num = parseInt(color.replace('#', ''), 16);
+        const amt = Math.round(2.55 * percent);
+        const R = (num >> 16) - amt;
+        const G = (num >> 8 & 0x00FF) - amt;
+        const B = (num & 0x0000FF) - amt;
+        
+        return '#' + (
+            0x1000000 +
+            (R < 255 ? R < 1 ? 0 : R : 255) * 0x10000 +
+            (G < 255 ? G < 1 ? 0 : G : 255) * 0x100 +
+            (B < 255 ? B < 1 ? 0 : B : 255)
+        ).toString(16).slice(1);
+    }
+    
+    // Helper function to lighten a color
+    function lightenColor(color, percent) {
+        const num = parseInt(color.replace('#', ''), 16);
+        const amt = Math.round(2.55 * percent);
+        const R = (num >> 16) + amt;
+        const G = (num >> 8 & 0x00FF) + amt;
+        const B = (num & 0x0000FF) + amt;
+        
+        return '#' + (
+            0x1000000 +
+            (R > 255 ? 255 : R) * 0x10000 +
+            (G > 255 ? 255 : G) * 0x100 +
+            (B > 255 ? 255 : B)
+        ).toString(16).slice(1);
+    }
+    
+    // Update active preset
+    function updateActivePreset(color) {
+        themePresets.forEach(preset => {
+            if (preset.dataset.color === color) {
+                preset.classList.add('active');
+            } else {
+                preset.classList.remove('active');
+            }
+        });
+    }
+    
+    // Toggle settings panel
+    settingsButton.addEventListener('click', function(e) {
+        e.stopPropagation();
+        settingsPanel.classList.toggle('show');
+    });
+    
+    // Close panel when clicking outside
+    document.addEventListener('click', function(e) {
+        if (!settingsPanel.contains(e.target) && !settingsButton.contains(e.target)) {
+            settingsPanel.classList.remove('show');
+        }
+    });
+    
+    // Color picker interaction
+    colorPicker.addEventListener('input', function() {
+        const color = this.value;
+        colorCircle.style.background = color;
+        updateActivePreset(color);
+    });
+    
+    // Click on color circle to open picker
+    colorCircle.addEventListener('click', function() {
+        colorPicker.click();
+    });
+    
+    // Apply theme button
+    applyBtn.addEventListener('click', function() {
+        const color = colorPicker.value;
+        applyThemeColor(color);
+        localStorage.setItem('websiteTheme', color);
+        updateActivePreset(color);
+        settingsPanel.classList.remove('show');
+    });
+    
+    // Reset to default button
+    resetBtn.addEventListener('click', function() {
+        applyThemeColor(DEFAULT_COLOR);
+        colorPicker.value = DEFAULT_COLOR;
+        colorCircle.style.background = DEFAULT_COLOR;
+        localStorage.setItem('websiteTheme', DEFAULT_COLOR);
+        updateActivePreset(DEFAULT_COLOR);
+        settingsPanel.classList.remove('show');
+    });
+    
+    // Theme preset buttons
+    themePresets.forEach(preset => {
+        preset.addEventListener('click', function() {
+            const color = this.dataset.color;
+            colorPicker.value = color;
+            colorCircle.style.background = color;
+            updateActivePreset(color);
+        });
+    });
+    
+    // Load theme on page load
+    loadTheme();
+});
+	
 }
     </script>
 </body>
