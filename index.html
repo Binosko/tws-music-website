@@ -2850,7 +2850,11 @@
 		
 // Commands Section Interactive Features
 document.addEventListener('DOMContentLoaded', function() {
-    // Only run if we're on the commands section or it exists
+    // Initialize commands functionality
+    initCommandsSection();
+});
+
+function initCommandsSection() {
     const commandsSection = document.getElementById('commands');
     if (!commandsSection) return;
     
@@ -2859,79 +2863,184 @@ document.addEventListener('DOMContentLoaded', function() {
     const commandCards = document.querySelectorAll('.command-card');
     const commandCount = document.getElementById('commandCount');
     
-    // Update command count
-    function updateCommandCount() {
-        const visibleCommands = document.querySelectorAll('.command-card:not(.hidden)').length;
-        commandCount.textContent = `${visibleCommands} commands`;
+    // Initialize command count
+    updateCommandCount();
+    
+    // Filter commands function
+    function filterCommands() {
+        const searchTerm = searchInput.value.toLowerCase().trim();
+        const activeCategory = document.querySelector('.category-btn.active')?.dataset.category || 'all';
+        
+        let visibleCount = 0;
+        
+        commandCards.forEach(card => {
+            const commandText = card.querySelector('.command-name').textContent.toLowerCase();
+            const description = card.querySelector('.command-description').textContent.toLowerCase();
+            const categories = card.dataset.categories || '';
+            const categoryArray = categories.split(' ');
+            
+            // Check if matches search
+            const matchesSearch = searchTerm === '' || 
+                commandText.includes(searchTerm) || 
+                description.includes(searchTerm);
+            
+            // Check if matches category
+            const matchesCategory = activeCategory === 'all' || 
+                categoryArray.includes(activeCategory);
+            
+            if (matchesSearch && matchesCategory) {
+                card.classList.remove('hidden');
+                card.style.display = 'block';
+                visibleCount++;
+                
+                // Add animation
+                card.style.animation = 'none';
+                setTimeout(() => {
+                    card.style.animation = 'slideIn 0.3s ease-out forwards';
+                }, 10);
+            } else {
+                card.classList.add('hidden');
+                card.style.display = 'none';
+            }
+        });
+        
+        // Update counter
+        commandCount.textContent = `${visibleCount} commands`;
+        
+        // Pulse animation for counter
         commandCount.style.animation = 'none';
         setTimeout(() => {
             commandCount.style.animation = 'pulse 2s infinite';
         }, 10);
     }
     
-    // Filter commands by search
-    function filterCommands() {
-        const searchTerm = searchInput.value.toLowerCase();
-        const activeCategory = document.querySelector('.category-btn.active').dataset.category;
-        
-        commandCards.forEach(card => {
-            const commandText = card.querySelector('.command-name').textContent.toLowerCase();
-            const description = card.querySelector('.command-description').textContent.toLowerCase();
-            const categories = card.dataset.categories.split(' ');
-            
-            const matchesSearch = commandText.includes(searchTerm) || description.includes(searchTerm);
-            const matchesCategory = activeCategory === 'all' || categories.includes(activeCategory);
-            
-            if (matchesSearch && matchesCategory) {
-                card.classList.remove('hidden');
-                card.style.animation = 'slideIn 0.5s ease-out forwards';
-            } else {
-                card.classList.add('hidden');
-            }
-        });
-        
-        updateCommandCount();
-    }
-    
-    // Category filter
+    // Category button click handlers
     categoryButtons.forEach(button => {
         button.addEventListener('click', function() {
-            categoryButtons.forEach(btn => btn.classList.remove('active'));
-            this.classList.add('active');
-            filterCommands();
+            // Remove active class from all buttons
+            categoryButtons.forEach(btn => {
+                btn.classList.remove('active');
+                btn.style.transform = 'scale(1)';
+            });
             
-            // Animation for category change
+            // Add active class to clicked button
+            this.classList.add('active');
             this.style.transform = 'scale(0.95)';
+            
+            // Reset animation
             setTimeout(() => {
                 this.style.transform = 'scale(1)';
             }, 150);
+            
+            // Filter commands
+            filterCommands();
         });
     });
     
-    // Search input listener
-    searchInput.addEventListener('input', filterCommands);
+    // Search input handler
+    if (searchInput) {
+        searchInput.addEventListener('input', function() {
+            clearTimeout(this.searchTimeout);
+            
+            this.searchTimeout = setTimeout(() => {
+                filterCommands();
+            }, 300); // Debounce for 300ms
+        });
+        
+        // Clear search on Escape key
+        searchInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                this.value = '';
+                filterCommands();
+            }
+        });
+    }
     
-    // Clear search on escape
-    searchInput.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape') {
-            this.value = '';
-            filterCommands();
-        }
-    });
-    
-    // Hover effects for command cards
+    // Command card hover effects
     commandCards.forEach(card => {
         card.addEventListener('mouseenter', function() {
-            this.style.transform = 'translateY(-5px)';
+            if (!this.classList.contains('hidden')) {
+                this.style.transform = 'translateY(-5px)';
+                this.style.boxShadow = '0 8px 20px rgba(255, 152, 0, 0.15)';
+            }
         });
         
         card.addEventListener('mouseleave', function() {
-            this.style.transform = 'translateY(0)';
+            if (!this.classList.contains('hidden')) {
+                this.style.transform = 'translateY(0)';
+                this.style.boxShadow = '';
+            }
         });
         
-        // Click to copy command (optional feature)
+        // Optional: Click to copy command (uncomment if you want this feature)
+        /*
         card.addEventListener('click', function() {
-            const commandName = this.querySelector('.command-name').
+            const commandName = this.querySelector('.command-name').textContent;
+            const commandToCopy = commandName.split(' ')[0]; // Get just the command without parameters
+            
+            // Copy to clipboard
+            navigator.clipboard.writeText(commandToCopy).then(() => {
+                // Show copied feedback
+                const originalText = this.querySelector('.command-name').textContent;
+                this.querySelector('.command-name').textContent = '✓ Copied!';
+                this.style.backgroundColor = 'rgba(76, 175, 80, 0.1)';
+                
+                setTimeout(() => {
+                    this.querySelector('.command-name').textContent = originalText;
+                    this.style.backgroundColor = '';
+                }, 1500);
+            });
+        });
+        */
+    });
+    
+    // Initialize filter on page load
+    filterCommands();
+    
+    // Update command count function
+    function updateCommandCount() {
+        const totalCommands = commandCards.length;
+        commandCount.textContent = `${totalCommands} commands`;
+    }
+    
+    // Add smooth scroll for anchor links in commands section
+    const commandLinks = document.querySelectorAll('a[href^="#commands"]');
+    commandLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            const targetId = this.getAttribute('href');
+            const targetSection = document.querySelector(targetId);
+            
+            if (targetSection) {
+                targetSection.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+                
+                // Focus search input when navigating to commands section
+                setTimeout(() => {
+                    if (searchInput && targetId === '#commands') {
+                        searchInput.focus();
+                    }
+                }, 500);
+            }
+        });
+    });
+    
+    // Add keyboard shortcut for search (Ctrl/Cmd + F in commands section)
+    document.addEventListener('keydown', function(e) {
+        const isCommandsSection = commandsSection.getBoundingClientRect().top < window.innerHeight && 
+                                  commandsSection.getBoundingClientRect().bottom > 0;
+        
+        if (isCommandsSection && (e.ctrlKey || e.metaKey) && e.key === 'f') {
+            e.preventDefault();
+            if (searchInput) {
+                searchInput.focus();
+                searchInput.select();
+            }
+        }
+    });
+}
     </script>
 </body>
 </html>
