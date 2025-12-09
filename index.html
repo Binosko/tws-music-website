@@ -3320,8 +3320,195 @@ document.addEventListener('DOMContentLoaded', function() {
     const resetBtn = document.getElementById('resetTheme');
     const themePresets = document.querySelectorAll('.theme-preset');
     
-    const DEFAULT_COLOR = '#4CAF50'; // Default green color
+    // Store ORIGINAL colors when page first loads (before any theme changes)
+    const ORIGINAL_COLORS = {
+        '--samp-green': getComputedStyle(document.documentElement).getPropertyValue('--samp-green').trim(),
+        '--samp-dark': getComputedStyle(document.documentElement).getPropertyValue('--samp-dark').trim(),
+        '--samp-orange': getComputedStyle(document.documentElement).getPropertyValue('--samp-orange').trim(),
+        '--samp-blue': getComputedStyle(document.documentElement).getPropertyValue('--samp-blue').trim(),
+        '--samp-red': getComputedStyle(document.documentElement).getPropertyValue('--samp-red').trim(),
+        '--samp-yellow': getComputedStyle(document.documentElement).getPropertyValue('--samp-yellow').trim(),
+        '--samp-purple': getComputedStyle(document.documentElement).getPropertyValue('--samp-purple').trim(),
+        '--samp-cyan': getComputedStyle(document.documentElement).getPropertyValue('--samp-cyan').trim(),
+        '--samp-pink': getComputedStyle(document.documentElement).getPropertyValue('--samp-pink').trim(),
+        '--samp-teal': getComputedStyle(document.documentElement).getPropertyValue('--samp-teal').trim()
+    };
     
+    // Load saved theme from localStorage
+    function loadTheme() {
+        const savedColor = localStorage.getItem('websiteTheme');
+        if (savedColor) {
+            applyThemeColor(savedColor);
+            colorPicker.value = savedColor;
+            colorCircle.style.background = savedColor;
+            updateActivePreset(savedColor);
+        } else {
+            // Show default color in picker even if not saved
+            colorPicker.value = ORIGINAL_COLORS['--samp-green'];
+            colorCircle.style.background = ORIGINAL_COLORS['--samp-green'];
+        }
+    }
+    
+    // Apply theme color to website
+    function applyThemeColor(color) {
+        // Set the main green color
+        document.documentElement.style.setProperty('--samp-green', color);
+        
+        // Keep all other colors as they were originally (from ORIGINAL_COLORS)
+        // This ensures only the green theme changes
+        document.documentElement.style.setProperty('--samp-blue', ORIGINAL_COLORS['--samp-blue']);
+        document.documentElement.style.setProperty('--samp-red', ORIGINAL_COLORS['--samp-red']);
+        document.documentElement.style.setProperty('--samp-yellow', ORIGINAL_COLORS['--samp-yellow']);
+        document.documentElement.style.setProperty('--samp-purple', ORIGINAL_COLORS['--samp-purple']);
+        document.documentElement.style.setProperty('--samp-cyan', ORIGINAL_COLORS['--samp-cyan']);
+        document.documentElement.style.setProperty('--samp-pink', ORIGINAL_COLORS['--samp-pink']);
+        document.documentElement.style.setProperty('--samp-teal', ORIGINAL_COLORS['--samp-teal']);
+        
+        // Create a slightly adjusted dark and orange based on the new color
+        const darkerColor = darkenColor(color, 20);
+        const lighterColor = lightenColor(color, 20);
+        
+        document.documentElement.style.setProperty('--samp-dark', darkerColor);
+        document.documentElement.style.setProperty('--samp-orange', lighterColor);
+        
+        // Update sections that use the green color
+        updateSections(color);
+    }
+    
+    // RESTORE ORIGINAL THEME (not just green)
+    function restoreOriginalTheme() {
+        // Restore ALL original colors exactly as they were
+        Object.keys(ORIGINAL_COLORS).forEach(colorVar => {
+            document.documentElement.style.setProperty(colorVar, ORIGINAL_COLORS[colorVar]);
+        });
+        
+        // Set picker to show the original green
+        colorPicker.value = ORIGINAL_COLORS['--samp-green'];
+        colorCircle.style.background = ORIGINAL_COLORS['--samp-green'];
+        
+        // Clear saved theme
+        localStorage.removeItem('websiteTheme');
+        
+        // Clear any active preset
+        updateActivePreset('');
+        
+        // Update sections
+        updateSections(ORIGINAL_COLORS['--samp-green']);
+    }
+    
+    // Update section borders and titles
+    function updateSections(color) {
+        const sections = document.querySelectorAll('.section');
+        sections.forEach(section => {
+            if (!section.classList.contains('section-commands') && 
+                !section.classList.contains('section-settings')) {
+                section.style.borderLeftColor = color;
+                const title = section.querySelector('.section-title');
+                if (title) {
+                    title.style.color = color;
+                    title.style.borderBottomColor = color;
+                }
+            }
+        });
+    }
+    
+    // Helper function to darken a color
+    function darkenColor(color, percent) {
+        const num = parseInt(color.replace('#', ''), 16);
+        const amt = Math.round(2.55 * percent);
+        const R = (num >> 16) - amt;
+        const G = (num >> 8 & 0x00FF) - amt;
+        const B = (num & 0x0000FF) - amt;
+        
+        return '#' + (
+            0x1000000 +
+            (R < 255 ? R < 1 ? 0 : R : 255) * 0x10000 +
+            (G < 255 ? G < 1 ? 0 : G : 255) * 0x100 +
+            (B < 255 ? B < 1 ? 0 : B : 255)
+        ).toString(16).slice(1);
+    }
+    
+    // Helper function to lighten a color
+    function lightenColor(color, percent) {
+        const num = parseInt(color.replace('#', ''), 16);
+        const amt = Math.round(2.55 * percent);
+        const R = (num >> 16) + amt;
+        const G = (num >> 8 & 0x00FF) + amt;
+        const B = (num & 0x0000FF) + amt;
+        
+        return '#' + (
+            0x1000000 +
+            (R > 255 ? 255 : R) * 0x10000 +
+            (G > 255 ? 255 : G) * 0x100 +
+            (B > 255 ? 255 : B)
+        ).toString(16).slice(1);
+    }
+    
+    // Update active preset
+    function updateActivePreset(color) {
+        themePresets.forEach(preset => {
+            if (preset.dataset.color === color) {
+                preset.classList.add('active');
+            } else {
+                preset.classList.remove('active');
+            }
+        });
+    }
+    
+    // Toggle settings panel
+    settingsButton.addEventListener('click', function(e) {
+        e.stopPropagation();
+        settingsPanel.classList.toggle('show');
+    });
+    
+    // Close panel when clicking outside
+    document.addEventListener('click', function(e) {
+        if (!settingsPanel.contains(e.target) && !settingsButton.contains(e.target)) {
+            settingsPanel.classList.remove('show');
+        }
+    });
+    
+    // Color picker interaction
+    colorPicker.addEventListener('input', function() {
+        const color = this.value;
+        colorCircle.style.background = color;
+        updateActivePreset(color);
+    });
+    
+    // Click on color circle to open picker
+    colorCircle.addEventListener('click', function() {
+        colorPicker.click();
+    });
+    
+    // Apply theme button
+    applyBtn.addEventListener('click', function() {
+        const color = colorPicker.value;
+        applyThemeColor(color);
+        localStorage.setItem('websiteTheme', color);
+        updateActivePreset(color);
+        settingsPanel.classList.remove('show');
+    });
+    
+    // Reset to original theme button
+    resetBtn.addEventListener('click', function() {
+        restoreOriginalTheme();
+        settingsPanel.classList.remove('show');
+    });
+    
+    // Theme preset buttons
+    themePresets.forEach(preset => {
+        preset.addEventListener('click', function() {
+            const color = this.dataset.color;
+            colorPicker.value = color;
+            colorCircle.style.background = color;
+            updateActivePreset(color);
+        });
+    });
+    
+    // Load theme on page load
+    loadTheme();
+});
+
     // Load saved theme from localStorage
     function loadTheme() {
         const savedColor = localStorage.getItem('websiteTheme');
